@@ -17,8 +17,13 @@ const postSchema = new mongoose.Schema({
         ref: 'Users',
     }],
     comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        text:{
+            type:String
+        },
+        userComment: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+        }
     }],
 }, { timeseries: true })
 

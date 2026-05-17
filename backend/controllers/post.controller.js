@@ -46,5 +46,21 @@ export const likePost = async (req,res)=>{
 
 
 export const commentPost = async (req,res)=>{
-    
+    try {
+        const {comment} = req.body;
+        const {postId} = req.params;
+        const userId= req.user._id;
+
+        const post = await Post.findById(postId)
+        if(!text) return res.json({status:201,message:'comment is empty'})
+        
+
+        const COMMENT={text:comment,userComment:userId}
+        post.comments.push(COMMENT)
+        await post.save()
+        return res.json({status:200,post})
+    } catch (error) {
+        console.log(error);
+        return res.json({status:500,message:'internal server error'})
+    }
 }
