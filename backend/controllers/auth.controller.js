@@ -2,10 +2,13 @@ import { generateToken } from "../lib/generatetoken.js";
 import userModel from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 
-export const signin = async (req, res) => {
+export const signup = async (req, res) => {
     try {
         console.log(req.body);
         const { username, name, email, password } = req.body;
+        if (!username || !name || !email || !password) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
         const user = await userModel.findOne({ email });
         if (user) return res.json({ status: 400, message: "user is already exist" });
         if (password.length < 6) return res.json({ message: 'password should atleast be 6 character long' })
@@ -18,7 +21,7 @@ export const signin = async (req, res) => {
             email,
             password: hashPass
         })
-        res.json({ status: 200, message: 'user created' })
+        return res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.log(`signin error: ${error.message}`)
         return res.json({ status: 500, message: 'internal server error' });
@@ -28,10 +31,15 @@ export const signin = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         const user = await userModel.findOne({ email });
         if (!user) return res.json({ status: 401, message: 'user not found' })
         const isMatch = await bcrypt.compare(password, user?.password || "")
-        if (!isMatch) return res.json({ status: 401, message: 'password or email is wrong' })
+        if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
+
 
         generateToken(user._id, res)
 
@@ -55,7 +63,7 @@ export const login = async (req, res) => {
 export const getData = async (req, res) => {
     try {
         const user = await userModel.findById(req.user._id).select('-password')
-        res.json({ status: 200, user })
+        return res.status(200).json({ user });
     } catch (error) {
         console.log("Error in geting data of user controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });

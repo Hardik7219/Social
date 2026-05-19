@@ -14,19 +14,28 @@ function Signup() {
         name: "",
         password: ""
     })
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setLoading(true);
         try {
-            const res =await signUp(formData)
-            navigate("/");
-            console.log(res);
-            
-
+            const res = await signUp(formData)
+            if (res.status === 201) {
+                navigate("/login");
+            }
         } catch (error) {
-            console.log(error.response.data);
+            const message = error.response?.data?.message || "Signup failed. Please try again.";
+            setError(message);
+            console.log(error.response?.data);
+        } finally {
+            setLoading(false);
         }
     }
     return (
@@ -34,6 +43,8 @@ function Signup() {
 
             <div className='h-100 w-100'>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-10 justify-center items-center'>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+
                     <div className='p-2 border-2 flex items-center justify-center gap-3 rounded-lg'>
                         <label><BsPersonVideo /></label>
                         <input type="text" placeholder='UserName' name="username" className='outline-0' onChange={handleChange} />
@@ -51,10 +62,11 @@ function Signup() {
                         <input type="password" placeholder='Password' name="password" className='outline-0' onChange={handleChange} />
                     </div>
                     <div>
-                        <button type="submit">submit</button>
-                    </div>
+                        <button type="submit" disabled={loading}>
+                            {loading ? "Signing up..." : "Submit"}
+                        </button>                    </div>
                     <div>
-                        <Link to="/login">Login</Link>
+                        <Link to="/login">Already have an account? Login</Link>
                     </div>
                 </form>
             </div>

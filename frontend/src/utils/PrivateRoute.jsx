@@ -1,10 +1,11 @@
 import { Outlet,Navigate } from "react-router-dom";
+import useAuth from '../hooks/useAuth'
 
 const PrivateRoute = ()=>{
-    const auth = {'token':true}
-    return (
-        auth.token?<Outlet/>:<Navigate to="/signup"></Navigate>
-    )
+    const {user,loading}= useAuth();
+    if(loading) return null
+
+    return user ? <Outlet/> : <Navigate to="/login" />
 }
 
 export default PrivateRoute

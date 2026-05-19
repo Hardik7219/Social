@@ -7,16 +7,8 @@ import API from "../services/auth.service";
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-
-        const storedUser = localStorage.getItem("user");
-
-        if (storedUser) 
-            setUser(JSON.parse(storedUser));
-
-
-    }, []);
     useEffect(() => {
 
         const checkAuth = async () => {
@@ -25,13 +17,15 @@ const AuthProvider = ({ children }) => {
 
                 const response = await API.get("/auth/my");
 
-                setUser(response.data);                
+                setUser(response.data.user);
             } catch (error) {
                 console.log(error);
-                
+
                 localStorage.removeItem("user");
 
                 setUser(null);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -48,10 +42,14 @@ const AuthProvider = ({ children }) => {
         setUser(userData);
     };
 
-    const logout = () => {
+    const logout = async () => {
 
+        try {
+            await API.post("/auth/logout");
+        } catch (error) {
+            console.log("Logout error:", error);
+        }
         localStorage.removeItem("user");
-
         setUser(null);
     };
 
@@ -61,7 +59,8 @@ const AuthProvider = ({ children }) => {
             value={{
                 user,
                 login,
-                logout
+                logout,
+                loading
             }}
         >
 
