@@ -60,9 +60,11 @@ export const commentPost = async (req, res) => {
         const { comment } = req.body;
         const { postId } = req.params;
         const userId = req.user._id;
-
+        console.log(comment)
         const post = await Post.findById(postId)
-        if (!comment) return res.json({ status: 201, message: 'comment is empty' })
+        if (comment.trim() === "") return res.status(400).json({
+            message: "comment is empty"
+        });
         const COMMENT = { text: comment, userComment: userId }
         post.comments.push(COMMENT)
         await post.save()
@@ -75,16 +77,18 @@ export const commentPost = async (req, res) => {
 
 export const allPosts = async (req, res) => {
     try {
-        const posts = (await Post.find()).sort({ createdAt: -1 }).populate({
+        const posts = await Post.find().sort({ createdAt: -1 }).populate({
             path: 'userId',
             select: "-password"
         }).populate({
             path: 'comments.userComment',
             select: '-password'
         })
-        if(!post)
-            return res.json({message:'there is no posts'})
-        res.status(200).json({posts})
+
+        if (!posts)
+            return res.json({ message: 'there is no posts' })
+
+        res.status(200).json({ posts })
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });
@@ -93,14 +97,14 @@ export const allPosts = async (req, res) => {
 
 export const userPost = async (req, res) => {
     try {
-        const {userName}= req.params;
-        const user = await User.findOne({username:userName})
-        if(!user) res.json({status:201,message:'user not found'})
-        
-        const userPosts = await Post.find({userId:user._id}).populate("comments.userComment"); 
-        if(!userPosts) return res.json({data:[]})
+        const { userName } = req.params;
+        const user = await User.findOne({ username: userName })
+        if (!user) res.json({ status: 201, message: 'user not found' })
 
-        res.json({status:200,userPosts})
+        const userPosts = await Post.find({ userId: user._id }).populate("comments.userComment");
+        if (!userPosts) return res.json({ data: [] })
+
+        res.json({ status: 200, userPosts })
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });

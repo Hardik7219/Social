@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
 
-import API from "../services/auth.service";
+import API from "../lib/axios";
 
 const AuthProvider = ({ children }) => {
 

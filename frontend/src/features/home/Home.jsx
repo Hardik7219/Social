@@ -3,8 +3,10 @@ import Navbar from "../../components/shared/Navbar"
 import Posts from "../posts/Posts"
 import Notifications from "../notifications/Notifications"
 import Chat from "../chats/Chat"
+import useAuth from "../../hooks/useAuth"
 
 function Home() {
+  const {user}= useAuth()
   const [page,setPage] = useState('posts')
   return (
     <>
@@ -18,7 +20,6 @@ function Home() {
             {page=="chat" && <Chat></Chat>}
           </div>
           <div className="h-screen w-100 border">
-
           </div>
       </div>
     </>
