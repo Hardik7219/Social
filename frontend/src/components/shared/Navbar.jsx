@@ -3,9 +3,12 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 
 function Navbar({ setPage }) {
+  const {user} =useAuth()
   return (
     <>
       <div className='h-full w-full flex flex-col justify-between p-2'>
@@ -23,7 +26,14 @@ function Navbar({ setPage }) {
         <div className="w-[98%] border-2 border-gray-700"></div>
         <ul className="flex lg:flex-col justify-center">
           <li className='flex items-center gap-2 hover:cursor-pointer'>
-            <CgProfile></CgProfile>Profile
+            <Link
+              to={`/profile/${user._id}`}
+              className="flex items-center gap-2"
+            >
+              <CgProfile size={20} />
+
+              <span>Profile</span>
+            </Link>
           </li>
           <li className='flex items-center gap-2 hover:cursor-pointer'><IoSettingsOutline></IoSettingsOutline>Settings</li>
         </ul>

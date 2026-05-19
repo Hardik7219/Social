@@ -3,8 +3,10 @@ import bcrypt from 'bcryptjs'
 
 export const getProfile = async (req, res) => {
     try {
-        const { username } = req.params;
-        const user = await User.findOne({ username }).select("-password")
+        const { id } = req.params;
+        console.log((id));
+        
+        const user = await User.findById(id).select("-password")
         if (!user) return res.json({ status: 401, message: 'user not found' })
 
         res.json(user)

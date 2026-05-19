@@ -1,6 +1,6 @@
 import Home from "./features/home/Home"
 import Signup from './features/auth/signup/Signup'
-
+import ProfilePage from "./features/profile/ProfilePage"
 import {
   BrowserRouter as Router,
   Routes, Route
@@ -21,6 +21,10 @@ function App() {
             <Route
               path="/login"
               element={<Login />}
+            />
+            <Route
+              path="/profile/:id"
+              element={<ProfilePage />}
             />
             <Route element={<Signup />} path="/signup"></Route>
           </Routes>
