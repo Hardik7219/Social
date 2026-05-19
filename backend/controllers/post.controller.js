@@ -3,13 +3,13 @@ import Post from "../models/post.model.js";
 
 export const createPost = async (req, res) => {
     try {
-        const { title, details } = req.body;
+        const { title } = req.body;
         console.log(title);
         
+        if(!title) return
         const newPost = await Post.create({
             userId: req.user._id,
             title: title,
-            details: details
         })
         res.json({ status: 200, message: 'post created' });
     } catch (error) {

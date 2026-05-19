@@ -2,8 +2,10 @@ import API  from "../lib/axios";
 
 
 
-export const createPost = async (postData)=>{
-    const res = await API.post("post/create",postData)
+export const createPost = async (title)=>{
+    console.log(title);
+    
+    const res = await API.post("post/create",title)
     console.log(res);
     
 }

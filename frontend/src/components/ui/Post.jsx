@@ -3,7 +3,7 @@ import Comment from "./Comment";
 import useAuth from "../../hooks/useAuth";
 import { addComment, deletePost, likePost } from "../../services/post.servive";
 
-function Post({ userId, id,title, text, username, name, comments, likes }) {
+function Post({ userId, id,title, username, name, comments, likes }) {
     const [showComments, setShowComments] = useState(false);
     const { user } = useAuth();
     const [c,setC]= useState();
@@ -40,7 +40,6 @@ function Post({ userId, id,title, text, username, name, comments, likes }) {
                 </div>
                 <div>
                     {title}
-                   {text}
                 </div>
                 <div>
                     <ul className="flex items-center gap-10">
