@@ -5,7 +5,7 @@ export const createPost = async (req, res) => {
     try {
         const { title, details } = req.body;
         console.log(title);
-
+        
         const newPost = await Post.create({
             userId: req.user._id,
             title: title,
@@ -60,7 +60,6 @@ export const commentPost = async (req, res) => {
         const { comment } = req.body;
         const { postId } = req.params;
         const userId = req.user._id;
-        console.log(comment)
         const post = await Post.findById(postId)
         if (comment.trim() === "") return res.status(400).json({
             message: "comment is empty"
