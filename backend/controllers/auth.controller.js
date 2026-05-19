@@ -24,6 +24,7 @@ export const signin = async (req, res) => {
         return res.json({ status: 500, message: 'internal server error' });
     }
 }
+
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -34,12 +35,16 @@ export const login = async (req, res) => {
 
         generateToken(user._id, res)
 
-        res.status(200).json({
-            _id: user._id,
-            username: user.username,
-            name: user.name,
-            email: user.email,
-        })
+        return res.status(200).json({
+            success: true,
+            user: {
+                _id: user._id,
+                username: user.username,
+                name: user.name,
+                email: user.email,
+            }
+        });
+
     } catch (error) {
         console.log("Error in login controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });
