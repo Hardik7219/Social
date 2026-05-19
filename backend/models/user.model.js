@@ -4,7 +4,7 @@ import mongoose, { Mongoose, Types } from "mongoose";
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        require: true,
+        required: true,
 
     },
     name: {
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     bio: {
         type: String
     }
-}, { timeseries: true })
+}, { timestamps: true })
 
 const User=mongoose.model('User', userSchema);
 export default User;

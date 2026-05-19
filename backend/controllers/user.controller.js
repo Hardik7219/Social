@@ -64,7 +64,7 @@ export const suggestedFollower = async (req, res) => {
         res.status(200).json(suggestedUsers);
     } catch (error) {
         console.log(error)
-        req.json({ status: 500, message: "internal server error" })
+        res.json({ status: 500, message: "internal server error" })
     }
 }
 export const updateProfile = async (req, res) => {
@@ -74,7 +74,8 @@ export const updateProfile = async (req, res) => {
         if(currentPassword || newPassword)
         {
             const isMatch = await bcrypt.compare(currentPassword,user.password)
-            if(isMatch) return res.json({status:401,message:"password is wrong"})
+            if(!isMatch) return res.json({status:401,message:"password is wrong"})
+                
             if(newPassword.lenth <6) return res.json({status:401,message:'password must 6 character long'})
         }
         

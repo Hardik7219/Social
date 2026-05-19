@@ -24,8 +24,8 @@ export const deletePost = async (req, res) => {
         const { postId } = req.params
         const id = req.user._id;
         const deletePost = await Post.findOneAndDelete({ _id: postId, userId: id });
-        if (deletePost) res.json({ message: 'there is no post' })
-        res.json({ status: 200, message: 'post deleted' })
+        if (!deletePost) return res.json({ message: 'there is no post' })
+        res.status(200).json({ message: 'post deleted' })
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });
@@ -62,7 +62,7 @@ export const commentPost = async (req, res) => {
         const userId = req.user._id;
 
         const post = await Post.findById(postId)
-        if (!text) return res.json({ status: 201, message: 'comment is empty' })
+        if (!comment) return res.json({ status: 201, message: 'comment is empty' })
         const COMMENT = { text: comment, userComment: userId }
         post.comments.push(COMMENT)
         await post.save()
@@ -73,16 +73,18 @@ export const commentPost = async (req, res) => {
     }
 }
 
-export const allPosts = async (req, set) => {
+export const allPosts = async (req, res) => {
     try {
-        const posts = (await Post.find()).sort({ createPost: -1 }).populate({
+        const posts = (await Post.find()).sort({ createdAt: -1 }).populate({
             path: 'userId',
             select: "-password"
         }).populate({
             path: 'comments.userComment',
             select: '-password'
         })
-        console.log(posts)
+        if(!post)
+            return res.json({message:'there is no posts'})
+        res.status(200).json({posts})
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });
@@ -96,9 +98,9 @@ export const userPost = async (req, res) => {
         if(!user) res.json({status:201,message:'user not found'})
         
         const userPosts = await Post.find({userId:user._id}).populate("comments.userComment"); 
-        if(!userPost) return res.json({status:200,userPost})
+        if(!userPosts) return res.json({data:[]})
 
-        res.json({status:200,userPost})
+        res.json({status:200,userPosts})
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });
