@@ -8,6 +8,5 @@ export const getNotifications = async ()=>{
 
 export const deleteNotifications = async ()=>{
     const res=await API.delete('/notification')
-    console.log((res));
     
 }

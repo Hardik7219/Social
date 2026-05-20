@@ -2,9 +2,9 @@ import API  from "../lib/axios";
 
 
 
-export const createPost = async (title)=>{
+export const createPost = async (formData)=>{
     
-    const res = await API.post("post/create",title)
+    const res = await API.post("post/create",formData)
     
 }
 export const fetchPosts = async ()=>{    
@@ -28,4 +28,8 @@ export const deletePost = async (postId)=>{
     
     const res = await API.post(`post/delete/${postId}`)
     
+}
+export const getUserPost = async (id)=>{
+    const res = await API.get(`post/userPosts/${id}`)
+    return res.data.userPosts
 }

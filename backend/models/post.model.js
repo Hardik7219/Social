@@ -14,14 +14,20 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
     }],
     comments: [{
-        text:{
-            type:String
+        text: {
+            type: String
         },
         userComment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         }
     }],
+    img: {
+        type: String,
+    },
+    imgPublicId: {
+        type: String
+    }
 }, { timestamps: true })
 
 const Post = mongoose.model('Post', postSchema)

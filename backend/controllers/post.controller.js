@@ -1,15 +1,32 @@
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
 import Notification from "../models/notification.model.js";
-
+import cloudinary
+    from "../config/cloudinary.js";
 export const createPost = async (req, res) => {
     try {
         const { title } = req.body;
-
-        if (!title) return
+        if (!title || title.trim() == "") {
+            return res.status(400).json({
+                message: "Title required"
+            });
+        }
+        let img = "";
+        let imgPublicId = ""
+        if (req.file) {
+            const uploadedResponse =
+                await cloudinary.uploader.upload(
+                    req.file.path
+                );
+            img = uploadedResponse.secure_url;
+            imgPublicId =
+                uploadedResponse.public_id;
+        }
         const newPost = await Post.create({
             userId: req.user._id,
             title: title,
+            img,
+            imgPublicId
         })
         res.json({ status: 200, message: 'post created' });
     } catch (error) {
@@ -23,8 +40,14 @@ export const deletePost = async (req, res) => {
     try {
         const { postId } = req.params
         const id = req.user._id;
+        const post = await Post.findById(postId)
+        if (!post) return res.json({ message: 'there is no post' })
+        await cloudinary.uploader.destroy(
+            post.imgPublicId
+        );
         const deletePost = await Post.findOneAndDelete({ _id: postId, userId: id });
-        if (!deletePost) return res.json({ message: 'there is no post' })
+
+
         res.status(200).json({ message: 'post deleted' })
     } catch (error) {
         console.log(error);
@@ -48,7 +71,7 @@ export const likePost = async (req, res) => {
                 to: likedPost.userId,
                 type: "like",
             });
-            await notification.save();            
+            await notification.save();
         }
 
     } catch (error) {
@@ -100,14 +123,13 @@ export const allPosts = async (req, res) => {
 
 export const userPost = async (req, res) => {
     try {
-        const { userName } = req.params;
-        const user = await User.findOne({ username: userName })
-        if (!user) res.json({ status: 201, message: 'user not found' })
-
+        const { id } = req.params;
+        const user = await User.findById(id)
+        if (!user) res.json({ status: 201, message: 'user not found' })        
         const userPosts = await Post.find({ userId: user._id }).populate("comments.userComment");
         if (!userPosts) return res.json({ data: [] })
 
-        res.json({ status: 200, userPosts })
+        res.status(200).json({userPosts})
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });
