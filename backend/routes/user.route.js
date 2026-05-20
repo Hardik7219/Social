@@ -6,7 +6,7 @@ import { protectedRoute } from '../middleware/middleware.js';
 const route = express.Router();
 
 route.get('/profile/:id',protectedRoute,getProfile)
-route.post('/follow/:username',protectedRoute,follow)
+route.post('/follow/:id',protectedRoute,follow)
 route.get('/suggestion',protectedRoute,suggestedFollower);
 
 

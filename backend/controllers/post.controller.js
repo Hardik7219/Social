@@ -1,12 +1,12 @@
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
+import Notification from "../models/notification.model.js";
 
 export const createPost = async (req, res) => {
     try {
         const { title } = req.body;
-        console.log(title);
-        
-        if(!title) return
+
+        if (!title) return
         const newPost = await Post.create({
             userId: req.user._id,
             title: title,
@@ -43,8 +43,12 @@ export const likePost = async (req, res) => {
         }
         else {
             await Post.findByIdAndUpdate(likedPost._id, { $push: { likes: id } })
-            return res.json({ status: 200, message: 'like the posts' })
-
+            const notification = new Notification({
+                from: id,
+                to: likedPost.userId,
+                type: "like",
+            });
+            await notification.save();            
         }
 
     } catch (error) {

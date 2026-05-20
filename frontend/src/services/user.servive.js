@@ -11,3 +11,9 @@ export const getUser = async (id)=>{
     return res.data;
     
 }
+
+export const follow= async (id)=>{
+    
+    const res = await API.post(`/user/follow/${id}`)
+    
+}

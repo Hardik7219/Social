@@ -23,18 +23,28 @@ const userSchema = new mongoose.Schema({
     },
     following: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'User',
         default: []
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'User',
         default: [],
+    }],
+    messages: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Msg'
+        }
+    ],
+    msgUsers :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     }],
     bio: {
         type: String
     }
 }, { timestamps: true })
 
-const User=mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 export default User;

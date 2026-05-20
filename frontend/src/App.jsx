@@ -1,6 +1,7 @@
 import Home from "./features/home/Home"
 import Signup from './features/auth/signup/Signup'
 import ProfilePage from "./features/profile/ProfilePage"
+import ChatSection from "./components/ui/ChatSection"
 import {
   BrowserRouter as Router,
   Routes, Route
@@ -25,6 +26,10 @@ function App() {
             <Route
               path="/profile/:id"
               element={<ProfilePage />}
+            />
+             <Route
+              path="/chatsec/:id"
+              element={<ChatSection />}
             />
             <Route element={<Signup />} path="/signup"></Route>
           </Routes>

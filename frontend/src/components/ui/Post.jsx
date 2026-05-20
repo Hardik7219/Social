@@ -2,6 +2,7 @@ import { useState } from "react"
 import Comment from "./Comment";
 import useAuth from "../../hooks/useAuth";
 import { addComment, deletePost, likePost } from "../../services/post.servive";
+import { Link } from "react-router-dom";
 
 function Post({ userId, id,title, username, name, comments, likes }) {
     const [showComments, setShowComments] = useState(false);
@@ -31,7 +32,7 @@ function Post({ userId, id,title, username, name, comments, likes }) {
                 <div className="flex items-center">
                     <div className="bg-red-500 h-20 w-20 rounded-full"></div>
                     <div>
-                        {username}
+                       <Link to={`/profile/${userId}`}>{username}</Link> 
 
                     </div>
                     {user._id == userId && (

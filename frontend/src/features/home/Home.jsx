@@ -41,7 +41,7 @@ function Home() {
 
                     {page === "posts" && <Posts />}
 
-                    {page === "notification" && (
+                    {page === "notifiation" && (
                         <Notifications />
                     )}
 

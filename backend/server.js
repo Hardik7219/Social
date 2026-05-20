@@ -7,6 +7,8 @@ import connectionDB from './db/connect.db.js';
 import authRoute from './routes/auth.route.js'
 import userRoute from './routes/user.route.js'
 import postRoute from './routes/post.route.js'
+import msgRoute from './routes/msg.route.js'
+import notificationRoute from './routes/notification.route.js'
 
 dotenv.config();
 const app= express();
@@ -21,8 +23,8 @@ app.use(cors({
 app.use('/api/auth',authRoute)
 app.use('/api/user',userRoute)
 app.use('/api/post',postRoute)
-
-
+app.use('/api/msg',msgRoute)
+app.use('/api/notification',notificationRoute)
 app.use('/',(req,res)=>{
     res.send('hello')
 })

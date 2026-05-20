@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../hooks/useAuth'
-import { useParams } from 'react-router-dom'
-import { getUser } from '../../services/user.servive'
+import { Link, useParams } from 'react-router-dom'
+import { follow, getUser } from '../../services/user.servive'
 
 function ProfilePage() {
   const { user } = useAuth()
-  const {id} = useParams()
-  const [data,setData] = useState(null)
-  const [otherUser,setOtherUser] = useState(false);
+  const { id } = useParams()
+  const [data, setData] = useState(null)
+  const [otherUser, setOtherUser] = useState(false);
   useEffect(() => {
     const fetchUser = async () => {
-      
-      if(id === user._id) {
-        console.log("hello");
+
+      if (id === user._id) {
         setData(user)
-      }else
-      {
-        const res=await getUser(id);
+      } else {
+        const res = await getUser(id);
         setData(res)
         setOtherUser(true)
       }
@@ -24,12 +22,21 @@ function ProfilePage() {
     fetchUser();
 
   }, [])
+  const followToggle = async () => {
+    await follow(id)
+  }
+  const updateProfile = async ()=>{
+
+  }
   return (
     <div>
       username:-{data?.username}
       <p>{data?.name}</p>
       <p>{data?.email}</p>
-      <button>{otherUser ?"follow":"update"}</button>
+      <button onClick={() => {
+        otherUser ? followToggle() : updateProfile()
+      }}>{otherUser ? "follow" : "update"}</button>
+      <button>{otherUser ?(<Link to={`/chatsec/${data?._id}`}>message</Link>):""}</button>
     </div>
   )
 }

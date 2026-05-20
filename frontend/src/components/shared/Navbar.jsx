@@ -19,7 +19,7 @@ function Navbar({ setPage }) {
           <li onClick={() => setPage("chat")} className='flex items-center gap-2 hover:cursor-pointer'>
             <IoChatbubbleEllipsesOutline></IoChatbubbleEllipsesOutline>Chat
           </li>
-          <li onClick={() => setPage("noifiation")} className='flex items-center gap-2 hover:cursor-pointer'>
+          <li onClick={() => setPage("notifiation")} className='flex items-center gap-2 hover:cursor-pointer'>
             <IoIosNotificationsOutline></IoIosNotificationsOutline>Notification
           </li>
         </ul>
