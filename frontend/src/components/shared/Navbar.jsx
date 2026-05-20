@@ -8,7 +8,7 @@ import useAuth from "../../hooks/useAuth";
 
 
 function Navbar({ setPage, page }) {
-  const {user} =useAuth()
+  const { user } = useAuth()
 
   const navClass = (key) =>
     page === key
@@ -19,9 +19,11 @@ function Navbar({ setPage, page }) {
     <>
       <div className='h-full w-full flex flex-row md:flex-col justify-around md:justify-between p-2 md:p-4 lg:p-5'>
         <div className="mb-0 md:mb-6 hidden md:block px-2">
-          <h1 className="text-xl font-bold text-gradient glow-text tracking-tight">
-            Social
-          </h1>
+          <img
+            src='../public/logo.png'
+            className='w-full max-h-96 object-contain'
+            alt=''
+          />
           <p className="text-xs text-slate-500 mt-0.5">Connect · Share · Grow</p>
         </div>
 

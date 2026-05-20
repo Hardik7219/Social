@@ -42,6 +42,7 @@ export const deletePost = async (req, res) => {
         const id = req.user._id;
         const post = await Post.findById(postId)
         if (!post) return res.json({ message: 'there is no post' })
+        if(post.imgPublicId)
         await cloudinary.uploader.destroy(
             post.imgPublicId
         );
