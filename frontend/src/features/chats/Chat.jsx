@@ -16,14 +16,28 @@ function Chat() {
   })
   return (
     <>
-      <div className='flex'>
-        <div className='bg-amber-500 w-full h-screen'>
+      <div className="animate-fade-in">
+        <div className="mb-6">
+          <p className="section-subtitle mb-1">Messages</p>
+          <h2 className="section-title">Your conversations</h2>
+        </div>
+
+        <div className='flex flex-col gap-2 stagger-children'>
           {data && (
             data.map((e) => (
-              <div key={e._id} className='border'>
-                <p><Link to={`/chatsec/${e._id}`}>{e.name}</Link></p>
-                <p>{e.username}</p>
-              </div>
+              <Link
+                key={e._id}
+                to={`/chatsec/${e._id}`}
+                className="suggestion-card flex items-center gap-4 group"
+              >
+                <div className="avatar-placeholder h-12 w-12 shrink-0 group-hover:scale-105 transition-transform duration-300" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">
+                    {e.name}
+                  </p>
+                  <p className="text-sm text-slate-500 truncate">@{e.username}</p>
+                </div>
+              </Link>
             ))
           )}
         </div>

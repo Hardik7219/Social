@@ -1,10 +1,8 @@
-:root{
-    --primary-color:,
-    --secondary-color:,
-
-    --primary-layout:,
-    --secondry-layout:,
-
-    --primary-text:,
-    --secondary-text:,
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #22d3ee;
+  --primary-layout: #0a0e17;
+  --secondary-layout: #111827;
+  --primary-text: #f1f5f9;
+  --secondary-text: #94a3b8;
 }

@@ -49,33 +49,40 @@ function Posts() {
   };
   return (
     <>
-      <div className='flex bg-gray-700 rounded-lg justify-center items-center mb-10 p-5 gap-2'>
-        <div>
-          <div className='bg-blue-700 h-20 w-20 rounded-full'></div>
-        </div>
-        <form onSubmit={handleSubmit} className='flex gap-2 flex-col bg-gray-800  rounded-tl-3xl p-5'>
-          <div>
-            <textarea placeholder='enter details..' className="px-4 py-2 outline-none w-150 text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#596A95] border-[#2B3040]" name="title" onChange={(e) => setTitle(e.target.value)}></textarea>
+      <div className='flex glass-panel rounded-2xl items-start mb-8 p-5 sm:p-6 gap-4 neon-ring animate-fade-in-up'>
+        <div className="avatar-placeholder h-14 w-14 sm:h-16 sm:w-16 shrink-0" />
+        <form onSubmit={handleSubmit} className='flex flex-1 min-w-0 gap-4 flex-col'>
+          <div className="w-full">
+            <textarea
+              placeholder="What's on your mind?"
+              className="input-field min-h-[100px] resize-none text-base"
+              name="title"
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
-          <div className='flex gap-10 '>
-            <div className='flex justify-center items-center'>
-              <button
-                type="button"
-                onClick={() =>
-                  imageRef.current.click()
-                }
-              >
-                <FaRegImage />
-              </button>              
-              <input type='file' accept='image/*' hidden ref={imageRef} onChange={handleImgChange} />
-            </div>
-            <div className='flex justify-center items-center'>
-              <button type="submit" className='bg-blue-500 p-2 rounded-md'>publish</button>
-            </div>
+          {img && (
+            <p className="text-xs text-cyan-400/90 font-medium truncate">
+              Image selected: {img.name}
+            </p>
+          )}
+          <div className='flex items-center justify-between gap-4 pt-1'>
+            <button
+              type="button"
+              onClick={() => imageRef.current.click()}
+              className="btn-ghost p-2.5"
+              aria-label="Add image"
+            >
+              <FaRegImage className="text-lg text-cyan-400" />
+            </button>
+            <input type='file' accept='image/*' hidden ref={imageRef} onChange={handleImgChange} />
+            <button type="submit" className='btn-primary px-6'>
+              Publish
+            </button>
           </div>
         </form>
       </div>
-      <div>
+
+      <div className="stagger-children">
         {posts && (
           posts.map((e) => (
             <div key={e._id}>

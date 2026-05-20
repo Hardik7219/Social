@@ -47,31 +47,49 @@ function Login() {
         }
     };
     return (
-        <div>
-            <div className='h-screen w-full flex justify-center items-center'>
-
-                <div className='h-100 w-100'>
-                    <form onSubmit={handleSubmit} className='flex flex-col gap-10 justify-center items-center'>
-                        {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                        <div className='p-2 border-2 flex items-center justify-center gap-3 rounded-lg'>
-                            <label><MdOutlineMail></MdOutlineMail></label>
-                            <input type="email" placeholder='Email' name="email" className='outline-0' onChange={handleChange} />
-                        </div>
-                        <div className='p-2 border-2 flex items-center justify-center gap-3 rounded-lg'>
-                            <label><RiLockPasswordLine></RiLockPasswordLine></label>
-                            <input type="password" placeholder='Password' name="password" className='outline-0' onChange={handleChange} />
-                        </div>
-                        <div>
-                            <button type="submit" disabled={loading}>
-                                {loading ? "Logging in..." : "Login"}
-                            </button>
-                        </div>
-                        <div>
-                            <Link to="/signup">Don't have an account? Sign up</Link>
-                        </div>
-                    </form>
+        <div className="min-h-screen w-full flex justify-center items-center px-4 py-12">
+            <div className="auth-card">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-gradient glow-text mb-2">Welcome back</h1>
+                    <p className="text-slate-500 text-sm">Sign in to continue to Social</p>
                 </div>
+
+                <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+                    {error && (
+                        <p className="text-red-400 text-sm text-center px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                            {error}
+                        </p>
+                    )}
+
+                    <div className='auth-input-group'>
+                        <label className="text-slate-400 shrink-0"><MdOutlineMail className="text-xl" /></label>
+                        <input
+                            type="email"
+                            placeholder='Email'
+                            name="email"
+                            className='input-glass'
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='auth-input-group'>
+                        <label className="text-slate-400 shrink-0"><RiLockPasswordLine className="text-xl" /></label>
+                        <input
+                            type="password"
+                            placeholder='Password'
+                            name="password"
+                            className='input-glass'
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+                        {loading ? "Logging in..." : "Sign in"}
+                    </button>
+                    <p className="text-center text-sm text-slate-500">
+                        <Link to="/signup" className="text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
+                            Don&apos;t have an account? Sign up
+                        </Link>
+                    </p>
+                </form>
             </div>
         </div>
     )

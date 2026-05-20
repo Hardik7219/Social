@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="min-h-screen text-slate-100">
         <Router>
           <Routes>
             <Route element={<PrivateRoute></PrivateRoute>}>
