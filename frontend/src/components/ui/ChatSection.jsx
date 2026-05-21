@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom'
 import { getChats, sendChat } from '../../services/chat.service';
@@ -26,7 +25,7 @@ function ChatSection() {
             }
         }
         fetchChats();
-    }, [])
+    })
     useEffect(() => {
 
         if (user?._id) {
@@ -84,10 +83,10 @@ function ChatSection() {
     return (
         <>
             <div className="min-h-screen flex flex-col max-w-2xl mx-auto bg-transparent">
-                <header className='glass-panel rounded-b-2xl flex w-full items-center gap-4 p-4 border-b border-white/[0.06] sticky top-0 z-40'>
+                <header className='glass-panel rounded-b-2xl flex w-full items-center gap-4 p-4 border-b border-white/6 sticky top-0 z-40'>
                     <Link
                         to="/"
-                        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-all duration-300"
+                        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/6 transition-all duration-300"
                     >
                         <IoArrowBack className="text-xl" />
                     </Link>
@@ -119,9 +118,9 @@ function ChatSection() {
                     )}
                 </div>
 
-                <div className='sticky bottom-0 p-4 glass-panel-strong border-t border-white/[0.06]'>
+                <div className='sticky bottom-0 p-4 glass-panel-strong border-t border-white/6'>
                     <form className='w-full' onSubmit={sendMsg}>
-                        <div className='flex items-center gap-2 rounded-2xl border border-blue-500/30 bg-white/[0.04] p-1.5 focus-within:border-cyan-400/50 focus-within:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all duration-300'>
+                        <div className='flex items-center gap-2 rounded-2xl border border-blue-500/30 bg-white/4 p-1.5 focus-within:border-cyan-400/50 focus-within:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all duration-300'>
                             <input
                                 onChange={(e) => setMsg(e.target.value)}
                                 className='input-glass flex-1 px-4 py-2.5'

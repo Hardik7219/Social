@@ -10,17 +10,17 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function Post({ post }) {
-    if (!post) return null;
     const [showComments, setShowComments] = useState(false);
     const { user } = useAuth();
-    const [c, setC] = useState();
+    const [c, setC] = useState("");
     const [deleteSure, setDeleteSure] = useState(false)
     const queryClient = useQueryClient();
     const handleSubmit = async (e) => {
         e.preventDefault();
         await commentMutation.mutateAsync(c);
+        setC("");
     }
-    
+
     const commentMutation = useMutation({
 
         mutationFn: (comment) =>
@@ -31,7 +31,7 @@ function Post({ post }) {
 
             await queryClient.cancelQueries({
 
-                queryKey: ["posts"]
+                queryKey: ["posts", post.userId._id]
             });
 
             const previousPosts =
@@ -100,11 +100,11 @@ function Post({ post }) {
 
             queryClient.invalidateQueries({
 
-                queryKey: ["posts"]
+                queryKey: ["posts", post.userId._id]
             });
         }
     });
-    
+
     const likeMutation = useMutation({
 
         mutationFn: () => likePost(post._id),
@@ -113,7 +113,7 @@ function Post({ post }) {
 
             await queryClient.cancelQueries({
 
-                queryKey: ["posts"]
+                queryKey: ["posts", post.userId._id]
             });
 
             const previousPosts =
@@ -153,7 +153,7 @@ function Post({ post }) {
 
             return { previousPosts };
         },
-        
+
         onError: (
             err,
             variables,
@@ -172,7 +172,7 @@ function Post({ post }) {
 
             queryClient.invalidateQueries({
 
-                queryKey: ["posts"]
+                queryKey: ["posts", post.userId._id]
             });
         }
     });
@@ -181,7 +181,10 @@ function Post({ post }) {
         await deletePost(post._id);
         setDeleteSure(false)
     }
-    
+    const isLiked = post.likes.some(
+        (id) => id.toString() === user._id
+    );
+    if (!post) return null;
     return (
         <>
             <article className="card-post">
@@ -204,8 +207,10 @@ function Post({ post }) {
                         >
                             {post.userId.username}
                         </Link>
-                        {name && (
-                            <p className="text-xs text-slate-500 truncate">{name}</p>
+                        {post.userId.name && (
+                            <p className="text-xs text-slate-500 truncate">
+                                {post.userId.name}
+                            </p>
                         )}
                     </div>
                     {user._id == post.userId._id && (
@@ -224,7 +229,7 @@ function Post({ post }) {
                 </div>
 
                 {post.img && (
-                    <div className="mx-5 mb-4 rounded-xl overflow-hidden border border-white/[0.06] bg-black/40">
+                    <div className="mx-5 mb-4 rounded-xl overflow-hidden border border-white/6 bg-black/40">
                         <img
                             src={post.img}
                             className='w-full max-h-96 object-contain'
@@ -233,12 +238,13 @@ function Post({ post }) {
                     </div>
                 )}
 
-                <footer className="px-5 py-3 border-t border-white/[0.06] flex items-center gap-6">
+                <footer className="px-5 py-3 border-t border-white/6 flex items-center gap-6">
                     <button
+                        disabled={likeMutation.isPending}
                         onClick={() => likeMutation.mutate()}
                         className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
                     >
-                        <AiOutlineLike className="text-lg group-hover:scale-110 transition-transform" />
+                        <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
                         <span className="font-medium">{post.likes?.length ?? 0}</span>
                         <span className="hidden sm:inline">Likes</span>
                     </button>
@@ -252,9 +258,10 @@ function Post({ post }) {
                 </footer>
 
                 {showComments && (
-                    <div className="border-t border-white/[0.06] bg-white/[0.02] p-5 space-y-4 animate-fade-in">
+                    <div className="border-t border-white/6 bg-white/2 p-5 space-y-4 animate-fade-in">
                         <form onSubmit={handleSubmit} className="flex gap-2">
                             <input
+                                value={c}
                                 type='text'
                                 onChange={(e) => setC(e.target.value)}
                                 placeholder='Write a comment...'

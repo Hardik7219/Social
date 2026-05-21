@@ -1,12 +1,11 @@
-import React from 'react'
-import useAuth from '../../hooks/useAuth'
+
 import { Link } from 'react-router-dom';
 
 function Comment({id,username,name,comment}) {
-  const {user} = useAuth();
+
   return (
     <>
-      <div className="flex gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.04] hover:border-blue-500/15 transition-colors duration-300">
+      <div className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/4 hover:border-blue-500/15 transition-colors duration-300">
 
         <div className="avatar-placeholder h-8 w-8 shrink-0" />
         <div className="flex-1 min-w-0">
@@ -16,7 +15,7 @@ function Comment({id,username,name,comment}) {
               <span className="text-xs text-slate-500">{name}</span>
             )}
           </div>
-          <p className="text-sm text-slate-300 mt-1 leading-relaxed break-words">
+          <p className="text-sm text-slate-300 mt-1 leading-relaxed wrap-break-word">
             {comment}
           </p>
         </div>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import { follow, getUser } from '../../services/user.servive'
@@ -144,7 +143,7 @@ function ProfilePage() {
         <header className="glass-panel rounded-2xl p-6 sm:p-8 mb-8 neon-ring">
           <Link
             to="/"
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-all duration-300"
+            className=" text-slate-400  hover:text-white hover:bg-white/6 transition-all duration-300"
           >
             <IoArrowBack className="text-xl" />
           </Link>

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Post from '../../components/ui/Post'
 import { createPost, fetchPosts } from '../../services/post.servive'
 import { useRef } from 'react'
 
 import { FaRegImage } from "react-icons/fa6";
-import { BiSolidLike } from "react-icons/bi";
-import { AiOutlineLike } from "react-icons/ai";
-
 
 import { useQuery} from "@tanstack/react-query";
 
@@ -57,7 +54,7 @@ function Posts() {
           <div className="w-full">
             <textarea
               placeholder="What's on your mind?"
-              className="input-field min-h-[100px] resize-none text-base"
+              className="input-field min-h-25 resize-none text-base"
               name="title"
               onChange={(e) => setTitle(e.target.value)}
             />
