@@ -7,22 +7,181 @@ import { AiOutlineLike } from "react-icons/ai";
 import { BiCommentDetail } from "react-icons/bi";
 import { HiOutlineTrash } from "react-icons/hi";
 
-function Post({ userId, id, title, username, img, name, comments, likes }) {
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+function Post({ post }) {
+    if (!post) return null;
     const [showComments, setShowComments] = useState(false);
     const { user } = useAuth();
     const [c, setC] = useState();
     const [deleteSure, setDeleteSure] = useState(false)
+    const queryClient = useQueryClient();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await addComment(id, c)
+        await commentMutation.mutateAsync(c);
     }
-    const toggleLike = async () => {
-        await likePost(id);
-    }
+    
+    const commentMutation = useMutation({
+
+        mutationFn: (comment) =>
+
+            addComment(post._id, comment),
+
+        onMutate: async (comment) => {
+
+            await queryClient.cancelQueries({
+
+                queryKey: ["posts"]
+            });
+
+            const previousPosts =
+                queryClient.getQueryData(["posts"]);
+
+            queryClient.setQueryData(
+
+                ["posts"],
+
+                (old) => {
+
+                    return old.map((p) => {
+
+                        if (p._id === post._id) {
+
+                            return {
+
+                                ...p,
+
+                                comments: [
+
+                                    ...p.comments,
+
+                                    {
+
+                                        text: comment,
+
+                                        userComment: {
+
+                                            _id: user._id,
+
+                                            username:
+                                                user.username,
+
+                                            name:
+                                                user.name
+                                        }
+                                    }
+                                ]
+                            };
+                        }
+
+                        return p;
+                    });
+                }
+            );
+
+            return { previousPosts };
+        },
+
+        onError: (
+            err,
+            variables,
+            context
+        ) => {
+
+            queryClient.setQueryData(
+
+                ["posts"],
+
+                context.previousPosts
+            );
+        },
+
+        onSettled: () => {
+
+            queryClient.invalidateQueries({
+
+                queryKey: ["posts"]
+            });
+        }
+    });
+    
+    const likeMutation = useMutation({
+
+        mutationFn: () => likePost(post._id),
+
+        onMutate: async () => {
+
+            await queryClient.cancelQueries({
+
+                queryKey: ["posts"]
+            });
+
+            const previousPosts =
+                queryClient.getQueryData(["posts"]);
+
+            queryClient.setQueryData(
+
+                ["posts"],
+
+                (old) => {
+
+                    return old.map((p) => {
+
+                        if (p._id === post._id) {
+
+                            const alreadyLiked =
+                                p.likes.includes(user._id);
+
+                            return {
+
+                                ...p,
+
+                                likes: alreadyLiked
+
+                                    ? p.likes.filter(
+                                        (id) => id !== user._id
+                                    )
+
+                                    : [...p.likes, user._id]
+                            };
+                        }
+
+                        return p;
+                    });
+                }
+            );
+
+            return { previousPosts };
+        },
+        
+        onError: (
+            err,
+            variables,
+            context
+        ) => {
+
+            queryClient.setQueryData(
+
+                ["posts"],
+
+                context.previousPosts
+            );
+        },
+
+        onSettled: () => {
+
+            queryClient.invalidateQueries({
+
+                queryKey: ["posts"]
+            });
+        }
+    });
+
     const deletePosts = async () => {
-        await deletePost(id);
+        await deletePost(post._id);
         setDeleteSure(false)
     }
+    
     return (
         <>
             <article className="card-post">
@@ -40,16 +199,16 @@ function Post({ userId, id, title, username, img, name, comments, likes }) {
                     <div className="avatar-placeholder h-12 w-12" />
                     <div className="flex-1 min-w-0">
                         <Link
-                            to={`/profile/${userId}`}
+                            to={`/profile/${post.userId._id}`}
                             className="font-semibold text-white hover:text-cyan-300 transition-colors truncate block"
                         >
-                            {username}
+                            {post.userId.username}
                         </Link>
                         {name && (
                             <p className="text-xs text-slate-500 truncate">{name}</p>
                         )}
                     </div>
-                    {user._id == userId && (
+                    {user._id == post.userId._id && (
                         <button
                             onClick={() => setDeleteSure(true)}
                             className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
@@ -61,13 +220,13 @@ function Post({ userId, id, title, username, img, name, comments, likes }) {
                 </header>
 
                 <div className="px-5 pb-4">
-                    <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{title}</p>
+                    <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{post.title}</p>
                 </div>
 
-                {img && (
+                {post.img && (
                     <div className="mx-5 mb-4 rounded-xl overflow-hidden border border-white/[0.06] bg-black/40">
                         <img
-                            src={img}
+                            src={post.img}
                             className='w-full max-h-96 object-contain'
                             alt=''
                         />
@@ -76,11 +235,11 @@ function Post({ userId, id, title, username, img, name, comments, likes }) {
 
                 <footer className="px-5 py-3 border-t border-white/[0.06] flex items-center gap-6">
                     <button
-                        onClick={toggleLike}
+                        onClick={() => likeMutation.mutate()}
                         className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
                     >
                         <AiOutlineLike className="text-lg group-hover:scale-110 transition-transform" />
-                        <span className="font-medium">{likes?.length ?? 0}</span>
+                        <span className="font-medium">{post.likes?.length ?? 0}</span>
                         <span className="hidden sm:inline">Likes</span>
                     </button>
                     <button
@@ -88,7 +247,7 @@ function Post({ userId, id, title, username, img, name, comments, likes }) {
                         className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors duration-300 group"
                     >
                         <BiCommentDetail className="text-lg group-hover:scale-110 transition-transform" />
-                        <span className="hidden sm:inline">Comments</span>
+                        <span className="hidden sm:inline"><span className="font-medium">{post.comments?.length ?? 0}</span> Comments</span>
                     </button>
                 </footer>
 
@@ -106,11 +265,11 @@ function Post({ userId, id, title, username, img, name, comments, likes }) {
                             </button>
                         </form>
                         <div className="space-y-3">
-                        {comments && (
-                            comments.map((e) => (
-                                <Comment key={e._id ?? e.userComment?._id} id={e.userComment._id} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
-                            ))
-                        )}
+                            {post.comments && (
+                                post.comments.map((e) => (
+                                    <Comment key={e._id ?? e.userComment?._id} id={e.userComment._id} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
+                                ))
+                            )}
                         </div>
                     </div>
                 )}

@@ -127,7 +127,7 @@ export const userPost = async (req, res) => {
         const { id } = req.params;
         const user = await User.findById(id)
         if (!user) res.json({ status: 201, message: 'user not found' })        
-        const userPosts = await Post.find({ userId: user._id }).populate("comments.userComment");
+        const userPosts = await Post.find({ userId: user._id }).populate("comments.userComment").populate("userId");
         if (!userPosts) return res.json({ data: [] })
 
         res.status(200).json({userPosts})

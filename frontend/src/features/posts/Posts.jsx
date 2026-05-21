@@ -4,37 +4,37 @@ import { createPost, fetchPosts } from '../../services/post.servive'
 import { useRef } from 'react'
 
 import { FaRegImage } from "react-icons/fa6";
+import { BiSolidLike } from "react-icons/bi";
+import { AiOutlineLike } from "react-icons/ai";
 
+
+import { useQuery} from "@tanstack/react-query";
+
+import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost';
 
 function Posts() {
-  const [posts, setPosts] = useState()
+  // const [posts, setPosts] = useState()
   const [title, setTitle] = useState("");
   const imageRef = useRef();
-  const [loading, setLoading] = useState(false);
   const [img, setImg] = useState(null)
-  useEffect(() => {
-    const fetch = async () => {
-      const data = await fetchPosts()
-      if (data) {
-        setPosts(data);
-      }
-    }
-    fetch();
 
-  }, [])
-
-  // const handleChange = (e) => {
-
-  //   setPostData({
-  //     ...postData,
-  //     [e.target.name]: e.target.value
-  //   });
-  // };
+  const {
+    data: posts,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts
+  })
+  if (error) {
+    return <h1>error</h1>
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('title', title)
     formData.append('img', img)
+
     await createPost(formData);
     setTitle("");
     setImg(null);
@@ -47,6 +47,8 @@ function Posts() {
       setImg(file);
     }
   };
+    console.log("posts",posts);
+
   return (
     <>
       <div className='flex glass-panel rounded-2xl items-start mb-8 p-5 sm:p-6 gap-4 neon-ring animate-fade-in-up'>
@@ -81,12 +83,14 @@ function Posts() {
           </div>
         </form>
       </div>
-
+      {isLoading && (
+        <SkeletonPost></SkeletonPost>
+      )}
       <div className="stagger-children">
         {posts && (
           posts.map((e) => (
             <div key={e._id}>
-              <Post userId={e.userId._id} id={e._id} title={e.title} text={e._detail} username={e.userId.username} img={e.img} name={e.userId.name} comments={e.comments} likes={e.likes}></Post>
+              <Post post={e}></Post>
             </div>
           ))
         )}

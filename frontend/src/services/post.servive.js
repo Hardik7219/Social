@@ -19,7 +19,7 @@ export const addComment = async (postId,comment)=>{
 }
 
 export const likePost = async (postId)=>{
-    
+        
     const res = await API.post(`post/like/${postId}`)
     
 }

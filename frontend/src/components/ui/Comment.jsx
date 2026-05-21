@@ -1,5 +1,6 @@
 import React from 'react'
 import useAuth from '../../hooks/useAuth'
+import { Link } from 'react-router-dom';
 
 function Comment({id,username,name,comment}) {
   const {user} = useAuth();
@@ -10,7 +11,7 @@ function Comment({id,username,name,comment}) {
         <div className="avatar-placeholder h-8 w-8 shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="font-medium text-sm text-white">{username}</span>
+            <span className="font-medium text-sm text-white"><Link to={`/profile/${id}`}>{username}</Link></span>
             {name && (
               <span className="text-xs text-slate-500">{name}</span>
             )}

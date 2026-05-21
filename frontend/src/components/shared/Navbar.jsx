@@ -5,6 +5,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { RiCompassDiscoverLine } from "react-icons/ri";
 
 
 function Navbar({ setPage, page }) {
@@ -20,7 +21,7 @@ function Navbar({ setPage, page }) {
       <div className='h-full w-full flex flex-row md:flex-col justify-around md:justify-between p-2 md:p-4 lg:p-5'>
         <div className="mb-0 md:mb-6 hidden md:block px-2">
           <img
-            src='../public/logo.png'
+            src='/logo.png'
             className='w-full max-h-96 object-contain'
             alt=''
           />
@@ -39,6 +40,9 @@ function Navbar({ setPage, page }) {
           <li onClick={() => setPage("notifiation")} className={navClass("notifiation")}>
             <IoIosNotificationsOutline className="text-xl md:text-lg shrink-0" />
             <span className="hidden sm:inline md:inline">Alerts</span>
+          </li>
+          <li onClick={() => setPage("discover")}  className="lg:hidden" className={navClass("discover")}>
+            <RiCompassDiscoverLine className="text-xl md:text-lg shrink-0"></RiCompassDiscoverLine>
           </li>
         </ul>
 
