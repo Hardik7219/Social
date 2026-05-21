@@ -12,10 +12,16 @@ import postRoute from './routes/post.route.js'
 import msgRoute from './routes/msg.route.js'
 import notificationRoute from './routes/notification.route.js'
 
+import http from "http";
 
-const app= express();
+import { initSocket }
+    from "./socket/socket.js";
+
+const app = express();
+const server =
+    http.createServer(app);
 const port = process.env.BACKEND_PORT || 4000
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(cors({
@@ -26,15 +32,21 @@ app.use(express.json({
     limit: "50mb"
 }));
 
-app.use('/api/auth',authRoute)
-app.use('/api/user',userRoute)
-app.use('/api/post',postRoute)
-app.use('/api/msg',msgRoute)
-app.use('/api/notification',notificationRoute)
-app.use('/',(req,res)=>{
+
+app.use('/api/auth', authRoute)
+app.use('/api/user', userRoute)
+app.use('/api/post', postRoute)
+app.use('/api/msg', msgRoute)
+app.use('/api/notification', notificationRoute)
+app.use('/', (req, res) => {
     res.send('hello')
 })
 connectionDB();
-app.listen(port,(req,res)=>{
-    console.log(`Server is running on port ${port}`);
-})
+initSocket(server);
+server.listen(port, () => {
+
+    console.log("server running");
+});
+// app.listen(port,(req,res)=>{
+//     console.log(`Server is running on port ${port}`);
+// })

@@ -10,7 +10,7 @@ export const sendMsg = async (
 ) => {
 
     try {
-
+        
         const { msg } = req.body;
 
         const { id } = req.params;
@@ -84,7 +84,6 @@ export const sendMsg = async (
         return res.status(200).json({
 
             success: true,
-
             data: newMsg
         });
 

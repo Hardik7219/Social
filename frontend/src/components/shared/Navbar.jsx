@@ -16,6 +16,10 @@ function Navbar({ setPage, page }) {
       ? "flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl font-medium text-xs md:text-sm cursor-pointer text-white bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border border-blue-500/25"
       : "flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl text-slate-400 font-medium text-xs md:text-sm cursor-pointer transition-all duration-300 hover:bg-white/[0.05] hover:text-slate-100";
 
+    const DisClass = (key) =>
+    page === key
+      ? "flex lg:hidden flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl font-medium text-xs md:text-sm cursor-pointer text-white bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border border-blue-500/25"
+      : "flex lg:hidden flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl text-slate-400 font-medium text-xs md:text-sm cursor-pointer transition-all duration-300 hover:bg-white/[0.05] hover:text-slate-100";
   return (
     <>
       <div className='h-full w-full flex flex-row md:flex-col justify-around md:justify-between p-2 md:p-4 lg:p-5'>
@@ -41,7 +45,7 @@ function Navbar({ setPage, page }) {
             <IoIosNotificationsOutline className="text-xl md:text-lg shrink-0" />
             <span className="hidden sm:inline md:inline">Alerts</span>
           </li>
-          <li onClick={() => setPage("discover")}  className="lg:hidden" className={navClass("discover")}>
+          <li onClick={() => setPage("discover")} className={DisClass("discover")}>
             <RiCompassDiscoverLine className="text-xl md:text-lg shrink-0"></RiCompassDiscoverLine>
           </li>
         </ul>
