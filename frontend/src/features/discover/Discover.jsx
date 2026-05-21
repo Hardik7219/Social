@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import useAuth from '../../hooks/useAuth';
 import { getSuggestedUsers } from '../../services/user.servive';
 
 function Discover() {
-    const { user } = useAuth();
     const [users, setUser] = useState()
     useEffect(() => {
         const suggestions = async () => {
@@ -15,7 +13,7 @@ function Discover() {
     }, [])
     return (
         <div>
-            <aside className="lg:flex w-full border-l border-white/[0.06] fixed right-0 top-0 h-screen glass-panel-strong z-40 flex-col p-5 overflow-y-auto">
+            <aside className="lg:flex w-full border-l border-white/6 fixed right-0 top-0 h-screen glass-panel-strong z-40 flex-col p-5 overflow-y-auto">
                 <div className="mb-6">
                     <p className="section-subtitle mb-1">Discover</p>
                     <h2 className="section-title">Suggested for you</h2>
@@ -36,7 +34,7 @@ function Discover() {
                                         </Link>
                                     </h3>
                                 </div>
-                                <p className="text-sm text-slate-500 truncate pl-[52px]">
+                                <p className="text-sm text-slate-500 truncate pl-13">
                                     {e?.name}
                                 </p>
                             </div>
