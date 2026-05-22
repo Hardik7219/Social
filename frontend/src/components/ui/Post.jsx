@@ -8,6 +8,11 @@ import { BiCommentDetail } from "react-icons/bi";
 import { HiOutlineTrash } from "react-icons/hi";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Prism as SyntaxHighlighter }
+    from "react-syntax-highlighter";
+
+import { oneDark }
+    from "react-syntax-highlighter/dist/esm/styles/prism";
 
 function Post({ post }) {
     const [showComments, setShowComments] = useState(false);
@@ -15,6 +20,7 @@ function Post({ post }) {
     const [c, setC] = useState("");
     const [deleteSure, setDeleteSure] = useState(false)
     const queryClient = useQueryClient();
+    const [copied, setCopied] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
         await commentMutation.mutateAsync(c);
@@ -184,6 +190,20 @@ function Post({ post }) {
     const isLiked = post.likes.some(
         (id) => id.toString() === user._id
     );
+    const copyCode = async () => {
+
+        await navigator.clipboard.writeText(
+            post.code
+        );
+
+        setCopied(true);
+
+        setTimeout(() => {
+
+            setCopied(false);
+
+        }, 2000);
+    };
     if (!post) return null;
     return (
         <>
@@ -245,7 +265,20 @@ function Post({ post }) {
                         />
                     </div>
                 )}
+                {post.code && (
+                    <div>
+                        <button onClick={copyCode}>
+                            Copy
+                        </button>
+                        <SyntaxHighlighter
+                            language="c"
+                            style={oneDark}
+                        >
+                            {post.code}
 
+                        </SyntaxHighlighter>
+                    </div>
+                )}
                 <footer className="px-5 py-3 border-t border-white/6 flex items-center gap-6">
                     <button
                         disabled={likeMutation.isPending}

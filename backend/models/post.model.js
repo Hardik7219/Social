@@ -25,7 +25,10 @@ const postSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ["normal","code"],
-        default: "text"
+        default: "normal"
+    },
+    code:{
+        type:String,
     },
     img: {
         type: String,

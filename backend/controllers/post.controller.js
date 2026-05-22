@@ -5,7 +5,8 @@ import cloudinary
     from "../config/cloudinary.js";
 export const createPost = async (req, res) => {
     try {
-        const { title } = req.body;
+        const { title, code } = req.body;
+
         if (!title || title.trim() == "") {
             return res.status(400).json({
                 message: "Title required"
@@ -22,12 +23,24 @@ export const createPost = async (req, res) => {
             imgPublicId =
                 uploadedResponse.public_id;
         }
-        const newPost = await Post.create({
-            userId: req.user._id,
-            title: title,
-            img,
-            imgPublicId
-        })
+        if (!code || code.trim() == "") {
+
+            const newPost = await Post.create({
+                userId: req.user._id,
+                title: title,
+                img,
+                imgPublicId,
+                type: "normal"
+            })
+        }
+        else {
+            const newPost = await Post.create({
+                userId: req.user._id,
+                title: title,
+                code:code,
+                type: "code"
+            })
+        }
         res.json({ status: 200, message: 'post created' });
     } catch (error) {
         console.log(error);
@@ -138,12 +151,12 @@ export const userPost = async (req, res) => {
 }
 
 export const getFollowerPost = async (req, res) => {
-    try {        
+    try {
         const Id = req.user._id;
         const ids = await User.findById(Id).select("following");
         const posts = await Post.find({ userId: ids.following }).populate({
-            path:'userId',
-            select:"username name avatar"
+            path: 'userId',
+            select: "username name avatar"
         }).populate({
             path: 'comments.userComment',
             select: '-password'
