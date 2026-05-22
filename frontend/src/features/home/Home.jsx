@@ -12,7 +12,6 @@ import Search from "../search/Search";
 
 function Home() {
 
-
     const [page, setPage] = useState("posts");
 
     return (
