@@ -174,7 +174,7 @@ function ProfilePage() {
                   {
                     otherUser
                       ? (isFollowing ? "Following" : "Follow")
-                      : "Update profile"
+                      : (<Link to={`/update/${profile?._id}`}>Update Profile</Link>)
                   }
                 </button>
                 {otherUser && (
@@ -190,7 +190,7 @@ function ProfilePage() {
             </div>
           </div>
             <div className='flex justify-end mt-2' onClick={userLogout}>
-                <button className='bg-rose-700 rounded-sm p-2 btn-ghost'>Logout</button>
+                <button className='bg-rose-700 rounded-lg p-2 btn-ghost'>Logout</button>
             </div>
         </header>
       )}

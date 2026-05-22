@@ -10,6 +10,7 @@ import PrivateRoute from "./routes/PrivateRoute"
 import Login from "./features/auth/login/Login"
 import FollowerList from "./features/followersPage/FollowerList"
 import FollowingList from "./features/followingPage/FollowingList"
+import ProfileUpdate from "./features/update/ProfileUpdate"
 
 function App() {
 
@@ -28,6 +29,10 @@ function App() {
             <Route
               path="/profile/:id"
               element={<ProfilePage />}
+            />
+            <Route
+              path="/update/:id"
+              element={<ProfileUpdate />}
             />
             <Route
               path="/chatsec/:id"

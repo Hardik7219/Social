@@ -138,7 +138,7 @@ export const userPost = async (req, res) => {
 }
 
 export const getFollowerPost = async (req, res) => {
-    try {
+    try {        
         const Id = req.user._id;
         const ids = await User.findById(Id).select("following");
         const posts = await Post.find({ userId: ids.following }).populate({

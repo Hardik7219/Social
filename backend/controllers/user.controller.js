@@ -96,7 +96,7 @@ export const updateProfile = async (req, res) => {
 export const getUserFollowers = async (req, res) => {
     try {
 
-        const { id } = req.params;                
+        const { id } = req.params;   
         const user = await User.findById(id)
             .populate({
                 path: "followers",
@@ -132,7 +132,7 @@ export const getUserFollowings = async (req, res) => {
     try {
 
         const { id } = req.params;
-
+        
         const user = await User.findById(id)
             .populate({
                 path: "following",
