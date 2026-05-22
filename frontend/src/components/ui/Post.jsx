@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
 import { BiCommentDetail } from "react-icons/bi";
 import { HiOutlineTrash } from "react-icons/hi";
+import { FaCode, FaCopy, FaCheck } from "react-icons/fa6";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Prism as SyntaxHighlighter }
@@ -13,6 +14,22 @@ import { Prism as SyntaxHighlighter }
 
 import { oneDark }
     from "react-syntax-highlighter/dist/esm/styles/prism";
+
+const stripCodeFences = (code) =>
+    code
+        .replace(/^```[\w-]*\n?/, "")
+        .replace(/\n?```$/, "")
+        .trim();
+
+const detectLanguage = (code) => {
+    const fence = code.match(/^```([\w-]+)/);
+    if (fence) return fence[1];
+    if (/#include\s+[<"]/.test(code)) return "c";
+    if (/\bdef\s+\w+\s*\(/.test(code)) return "python";
+    if (/\bfunc\s+\w+/.test(code) || /\bpackage\s+main\b/.test(code)) return "go";
+    if (/\binterface\s+\w+/.test(code) && /\btype\s+\w+/.test(code)) return "typescript";
+    return "javascript";
+};
 
 function Post({ post }) {
     const [showComments, setShowComments] = useState(false);
@@ -190,20 +207,16 @@ function Post({ post }) {
     const isLiked = post.likes.some(
         (id) => id.toString() === user._id
     );
+    const isCodePost = post.type === "code" || !!post.code;
+    const displayCode = post.code ? stripCodeFences(post.code) : "";
+    const codeLanguage = displayCode ? detectLanguage(post.code) : "javascript";
+
     const copyCode = async () => {
-
-        await navigator.clipboard.writeText(
-            post.code
-        );
-
+        await navigator.clipboard.writeText(displayCode);
         setCopied(true);
-
-        setTimeout(() => {
-
-            setCopied(false);
-
-        }, 2000);
+        setTimeout(() => setCopied(false), 2000);
     };
+
     if (!post) return null;
     return (
         <>
@@ -252,9 +265,13 @@ function Post({ post }) {
                     )}
                 </header>
 
-                <div className="px-5 pb-4">
-                    <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{post.title}</p>
-                </div>
+                {post.title?.trim() && (
+                    <div className="px-5 pb-4">
+                        <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">
+                            {post.title}
+                        </p>
+                    </div>
+                )}
 
                 {post.img && (
                     <div className="mx-5 mb-4 rounded-xl overflow-hidden border border-white/6 bg-black/40">
@@ -265,18 +282,61 @@ function Post({ post }) {
                         />
                     </div>
                 )}
-                {post.code && (
-                    <div>
-                        <button onClick={copyCode}>
-                            Copy
-                        </button>
-                        <SyntaxHighlighter
-                            language="c"
-                            style={oneDark}
-                        >
-                            {post.code}
-
-                        </SyntaxHighlighter>
+                {isCodePost && displayCode && (
+                    <div className="code-snippet">
+                        <div className="code-snippet-header">
+                            <div className="flex items-center gap-3 min-w-0">
+                                <div className="flex gap-1.5 shrink-0" aria-hidden>
+                                    <span className="w-3 h-3 rounded-full bg-red-500/70" />
+                                    <span className="w-3 h-3 rounded-full bg-amber-400/70" />
+                                    <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
+                                </div>
+                                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-400/90">
+                                    <FaCode className="text-sm" />
+                                    {codeLanguage}
+                                </span>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={copyCode}
+                                className="btn-ghost py-1.5 px-3 text-xs shrink-0"
+                            >
+                                {copied ? (
+                                    <>
+                                        <FaCheck className="text-emerald-400" />
+                                        Copied
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaCopy className="text-cyan-400" />
+                                        Copy
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                        <div className="code-snippet-body">
+                            <SyntaxHighlighter
+                                language={codeLanguage}
+                                style={oneDark}
+                                showLineNumbers
+                                wrapLongLines
+                                customStyle={{
+                                    margin: 0,
+                                    padding: "1rem 1.25rem",
+                                    background: "transparent",
+                                    fontSize: "0.8125rem",
+                                    lineHeight: 1.6,
+                                }}
+                                lineNumberStyle={{
+                                    minWidth: "2.25rem",
+                                    paddingRight: "1rem",
+                                    color: "rgba(148, 163, 184, 0.45)",
+                                    userSelect: "none",
+                                }}
+                            >
+                                {displayCode}
+                            </SyntaxHighlighter>
+                        </div>
                     </div>
                 )}
                 <footer className="px-5 py-3 border-t border-white/6 flex items-center gap-6">

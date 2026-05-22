@@ -148,6 +148,39 @@
     box-shadow: var(--shadow-neon), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
+  .code-snippet {
+    @apply mx-5 mb-4 rounded-xl overflow-hidden border border-cyan-500/20;
+    background: linear-gradient(180deg, #0d1117 0%, #080b12 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(34, 211, 238, 0.08);
+  }
+
+  .code-snippet-header {
+    @apply flex items-center justify-between gap-3 px-4 py-2.5
+      border-b border-white/[0.06] bg-white/[0.03];
+  }
+
+  .code-snippet-body {
+    @apply overflow-x-auto max-h-[28rem];
+  }
+
+  .code-snippet-body pre {
+    @apply !m-0 !rounded-none !bg-transparent;
+  }
+
+  .code-textarea {
+    @apply w-full min-h-48 max-h-80 resize-y px-4 py-3 font-mono text-[0.8125rem] leading-relaxed
+      text-slate-200 placeholder:text-slate-600 outline-none bg-transparent border-0
+      selection:bg-cyan-500/25;
+    tab-size: 2;
+  }
+
+  .code-textarea:focus {
+    @apply ring-0;
+  }
+
   .avatar-placeholder {
     @apply rounded-full shrink-0 bg-gradient-to-br from-blue-600/40 to-cyan-500/30
       border border-blue-500/30;

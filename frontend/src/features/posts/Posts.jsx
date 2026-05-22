@@ -1,25 +1,20 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Post from '../../components/ui/Post'
 import { createPost, fetchPosts } from '../../services/post.servive'
-import { useRef } from 'react'
-
-import { FaRegImage } from "react-icons/fa6";
-import { FaCode } from "react-icons/fa6";
-
-
+import { FaRegImage, FaCode } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
-
 import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost';
 import useAuth from '../../hooks/useAuth';
 
 function Posts() {
-  // const [posts, setPosts] = useState()
   const [title, setTitle] = useState("");
   const imageRef = useRef();
-  const [img, setImg] = useState(null)
-  const [showCode, setShowCode] = useState(false)
-  const [code,setCode] = useState("")
+  const [img, setImg] = useState(null);
+  const [showCode, setShowCode] = useState(false);
+  const [code, setCode] = useState("");
   const { user } = useAuth();
+
   const {
     data: posts,
     isLoading,
@@ -27,30 +22,46 @@ function Posts() {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts
-  })
+  });
+
   if (error) {
     return <h1>error</h1>
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('title', title)
-    if(!code) formData.append('img', img)
-    else formData.append('code',code)
+    formData.append('title', title);
+    if (!code) formData.append('img', img);
+    else formData.append('code', code);
     await createPost(formData);
     setTitle("");
     setImg(null);
-    setCode("")
-  }
+    setCode("");
+    setShowCode(false);
+  };
 
   const handleImgChange = (e) => {
-    setCode("")
+    setCode("");
+    setShowCode(false);
     const file = e.target.files[0];
     if (file) {
-
       setImg(file);
     }
   };
+
+  const openCodeEditor = () => {
+    setShowCode(true);
+    setImg(null);
+    if (imageRef.current) imageRef.current.value = "";
+  };
+
+  const closeCodeEditor = () => {
+    setShowCode(false);
+    setCode("");
+  };
+
+  const codeActive = showCode || !!code.trim();
 
   return (
     <>
@@ -59,10 +70,10 @@ function Posts() {
           <img
             src={user.avatar}
             alt={user.name}
-            className="h-14 w-14  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+            className="h-14 w-14 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
           />
         ) : (
-          <div className="avatar-placeholder h-14 w-14  shrink-0" />
+          <div className="avatar-placeholder h-14 w-14 shrink-0" />
         )}
         <form onSubmit={handleSubmit} className='flex flex-1 min-w-0 gap-4 flex-col'>
           <div className="w-full">
@@ -70,57 +81,112 @@ function Posts() {
               placeholder="What's on your mind?"
               className="input-field min-h-25 resize-none text-base"
               name="title"
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
+
+          {showCode && (
+            <div className="code-snippet !mx-0 w-full animate-fade-in">
+              <div className="code-snippet-header">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex gap-1.5 shrink-0" aria-hidden>
+                    <span className="w-3 h-3 rounded-full bg-red-500/70" />
+                    <span className="w-3 h-3 rounded-full bg-amber-400/70" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-400/90">
+                    <FaCode className="text-sm" />
+                    Write code
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeCodeEditor}
+                  className="btn-ghost py-1.5 px-2.5 text-xs shrink-0"
+                  aria-label="Remove code"
+                >
+                  <IoClose className="text-base" />
+                </button>
+              </div>
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="code-textarea"
+                placeholder={'// Paste or type your code here\nfunction hello() {\n  console.log("Hello");\n}'}
+                spellCheck={false}
+                autoFocus
+              />
+              <p className="text-xs text-slate-500 px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.02]">
+                Tip: start with{" "}
+                <span className="font-mono text-cyan-400/80">```javascript</span>{" "}
+                for syntax highlighting on the feed
+              </p>
+            </div>
+          )}
+
           {img && (
             <p className="text-xs text-cyan-400/90 font-medium truncate">
               Image selected: {img.name}
             </p>
           )}
+
           <div className='flex items-center justify-between gap-4 pt-1'>
             <div className='flex items-center gap-2'>
               <button
                 type="button"
                 onClick={() => imageRef.current.click()}
-                className="btn-ghost p-2.5"
+                disabled={codeActive}
+                className="btn-ghost p-2.5 disabled:opacity-40"
                 aria-label="Add image"
               >
                 <FaRegImage className="text-lg text-cyan-400" />
               </button>
-              <input type='file' accept='image/*' hidden ref={imageRef} onChange={handleImgChange} />
-              <button className="btn-ghost p-2.5" onClick={()=>setShowCode(true)}><FaCode></FaCode></button>
+              <input
+                type='file'
+                accept='image/*'
+                hidden
+                ref={imageRef}
+                onChange={handleImgChange}
+              />
+              <button
+                type="button"
+                className={`btn-ghost p-2.5 ${codeActive ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-300" : ""}`}
+                onClick={() => (showCode ? closeCodeEditor() : openCodeEditor())}
+                aria-label="Add code"
+                aria-pressed={codeActive}
+              >
+                <FaCode className="text-lg" />
+              </button>
             </div>
-            <button type="submit" className='btn-primary px-6'>
+            <button
+              type="submit"
+              className='btn-primary px-6'
+              disabled={!title.trim() && !code.trim() && !img}
+            >
               Publish
             </button>
           </div>
         </form>
       </div>
+
       {isLoading && (
         <div>
-          <SkeletonPost></SkeletonPost>
-          <SkeletonPost></SkeletonPost>
-          <SkeletonPost></SkeletonPost>
+          <SkeletonPost />
+          <SkeletonPost />
+          <SkeletonPost />
         </div>
       )}
+
       <div className="stagger-children">
         {posts && (
           posts.map((e) => (
             <div key={e._id}>
-              <Post post={e}></Post>
+              <Post post={e} />
             </div>
           ))
         )}
       </div>
-      {showCode && (
-        <div className='bg-amber-400 w-full z-50 absolute flex top-100'>
-          <div>
-            <button onClick={()=>setShowCode(false)}>close</button>
-            <textarea onChange={(e)=>setCode(e.target.value)}></textarea>
-          </div>
-        </div>
-      )}
     </>
   )
 }
