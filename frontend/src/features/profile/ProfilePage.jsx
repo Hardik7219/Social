@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost'
 import SkeletonProfile from '../../components/ui/skelotonLoaders/SkeletonProfile'
 import { IoArrowBack } from 'react-icons/io5'
+import { logout } from '../../services/auth.service'
 function ProfilePage() {
   const { user } = useAuth()
   const { id } = useParams()
@@ -129,8 +130,9 @@ function ProfilePage() {
       <SkeletonPost></SkeletonPost>
     </div>;
   }
-  console.log("user", posts);
-
+  const userLogout = async ()=>{
+    await logout();
+  }
   if (postsError || profileError) {
     return <h1>error</h1>
   }
@@ -154,33 +156,42 @@ function ProfilePage() {
               <p className="text-slate-400 mt-1">{profile.name}</p>
               <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p>
             </div>
-            <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0">
-              <button disabled={followMutation.isPending}
-                onClick={() => {
-                  otherUser
-                    ? followMutation.mutate()
-                    : updateProfile()
-                }}
+            <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
+              <div  className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                <button disabled={followMutation.isPending}
+                  onClick={() => {
+                    otherUser
+                      ? followMutation.mutate()
+                      : updateProfile()
+                  }}
 
-                className={
-                  isFollowing
-                    ? "btn-ghost"
-                    : "btn-primary"
-                }
-              >
-                {
-                  otherUser
-                    ? (isFollowing ? "Following" : "Follow")
-                    : "Update profile"
-                }
-              </button>
-              {otherUser && (
-                <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
-                  Message
-                </Link>
-              )}
+                  className={
+                    isFollowing
+                      ? "btn-ghost"
+                      : "btn-primary"
+                  }
+                >
+                  {
+                    otherUser
+                      ? (isFollowing ? "Following" : "Follow")
+                      : "Update profile"
+                  }
+                </button>
+                {otherUser && (
+                  <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
+                    Message
+                  </Link>
+                )}
+              </div>
+              <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                <p className='text-slate-400 mt-1'>{profile?.followers?.length ?? 0} <Link to={`/followers/${profile._id}`}>followers</Link></p>
+                <p className='text-slate-400 mt-1'>{profile?.following?.length ?? 0} <Link to={`/followings/${profile._id}`}>followings</Link></p>
+              </div>
             </div>
           </div>
+            <div className='flex justify-end mt-2' onClick={userLogout}>
+                <button className='bg-rose-700 rounded-sm p-2 btn-ghost'>Logout</button>
+            </div>
         </header>
       )}
 

@@ -7,13 +7,25 @@ export const getSuggestedUsers = async ()=>{
 }
 
 export const getUser = async (id)=>{
-    const res = await API.get(`/user/profile/${id}`)
+    const res = await API.get(`/user/profile/${id}`)    
+    
     return res.data;
+
+    
+}
+export const follow= async (id)=>{
+    
+    await API.post(`/user/follow/${id}`)
+    
+}
+export const getUserFollowings = async (id) =>{
+    
+    const res = await API.get(`/user/getfollowings/${id}`)
+    return res.data.followings;
     
 }
 
-export const follow= async (id)=>{
-    
-    const res = await API.post(`/user/follow/${id}`)
-    
+export const getUserFollowers = async (id) =>{
+    const res = await API.get(`/user/getfollowers/${id}`)
+    return res.data.followers;
 }

@@ -19,3 +19,7 @@ export const signUp = async (data)=>{
     return res;
 
 }
+
+export const logout = async ()=>{
+    await API.post('auth/logout')
+}

@@ -7,6 +7,7 @@ import Notifications from "../notifications/Notifications";
 import Chat from "../chats/Chat";
 
 import Discover from "../discover/Discover";
+import FollowerPost from "../followersPosts/FollowerPost";
 
 function Home() {
 
@@ -41,6 +42,9 @@ function Home() {
                     <div className="lg:hidden">
                         {page =="discover" && <Discover></Discover>}
                     </div>
+                    {page === "post" && (
+                        <FollowerPost />
+                    )}
                 </main>
                 <aside className="hidden lg:flex w-72 border-l border-white/6 fixed right-0 top-0 h-screen glass-panel-strong z-40 flex-col p-5 overflow-y-auto">
                     <Discover></Discover>

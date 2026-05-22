@@ -1,6 +1,6 @@
 import  { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getSuggestedUsers } from '../../services/user.servive';
+import UserUi from '../../components/ui/UserUi';
 
 function Discover() {
     const [users, setUser] = useState()
@@ -22,21 +22,8 @@ function Discover() {
                 <div className="flex flex-col gap-3 stagger-children">
                     {users && (
                         users.map((e) => (
-                            <div key={e?._id} className="suggestion-card">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="avatar-placeholder h-10 w-10" />
-                                    <h3 className="font-semibold text-white truncate">
-                                        <Link
-                                            to={`/profile/${e?._id}`}
-                                            className="hover:text-cyan-300 transition-colors duration-300"
-                                        >
-                                            {e?.username}
-                                        </Link>
-                                    </h3>
-                                </div>
-                                <p className="text-sm text-slate-500 truncate pl-13">
-                                    {e?.name}
-                                </p>
+                            <div key={e?._id}>
+                                <UserUi id={e._id} username={e.username} name={e.name}></UserUi>
                             </div>
                         ))
                     )}

@@ -42,10 +42,10 @@ export const deletePost = async (req, res) => {
         const id = req.user._id;
         const post = await Post.findById(postId)
         if (!post) return res.json({ message: 'there is no post' })
-        if(post.imgPublicId)
-        await cloudinary.uploader.destroy(
-            post.imgPublicId
-        );
+        if (post.imgPublicId)
+            await cloudinary.uploader.destroy(
+                post.imgPublicId
+            );
         const deletePost = await Post.findOneAndDelete({ _id: postId, userId: id });
 
 
@@ -126,11 +126,27 @@ export const userPost = async (req, res) => {
     try {
         const { id } = req.params;
         const user = await User.findById(id)
-        if (!user) res.json({ status: 201, message: 'user not found' })        
+        if (!user) res.json({ status: 201, message: 'user not found' })
         const userPosts = await Post.find({ userId: user._id }).populate("comments.userComment").populate("userId");
         if (!userPosts) return res.json({ data: [] })
 
-        res.status(200).json({userPosts})
+        res.status(200).json({ userPosts })
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500, message: 'internal server error' });
+    }
+}
+
+export const getFollowerPost = async (req, res) => {
+    try {
+        const Id = req.user._id;
+        const ids = await User.findById(Id).select("following");
+        const posts = await Post.find({ userId: ids.following }).populate({
+            path:'userId',
+            select:"username name"
+        })
+        res.status(200).json({ posts })
+
     } catch (error) {
         console.log(error);
         return res.json({ status: 500, message: 'internal server error' });

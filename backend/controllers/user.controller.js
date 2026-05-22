@@ -38,8 +38,8 @@ export const follow = async (req, res) => {
             await User.findByIdAndUpdate(diffUser._id, { $push: { followers: currentUser._id } })
 
             const newNotification = await Notification({
-                from: diffUser._id,
-                to: currentUser._id,
+                from: currentUser._id,
+                to: diffUser._id,
                 type: "follow"
             })
             await newNotification.save();
@@ -92,3 +92,73 @@ export const updateProfile = async (req, res) => {
         res.json({ status: 500, message: "internal server error" })
     }
 }
+
+export const getUserFollowers = async (req, res) => {
+    try {
+
+        const { id } = req.params;                
+        const user = await User.findById(id)
+            .populate({
+                path: "followers",
+                select: "username name _id"
+            })
+            .lean();
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            followers: user.followers
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+
+export const getUserFollowings = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        const user = await User.findById(id)
+            .populate({
+                path: "following",
+                select: "username name avatar bio"
+            })
+            .lean();
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }        
+        return res.status(200).json({
+            success: true,
+            followings: user.following
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};

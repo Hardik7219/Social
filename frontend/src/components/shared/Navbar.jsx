@@ -6,6 +6,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { RiCompassDiscoverLine } from "react-icons/ri";
+import { BsFilePostFill } from "react-icons/bs";
 
 
 function Navbar({ setPage, page }) {
@@ -16,7 +17,7 @@ function Navbar({ setPage, page }) {
       ? "flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl font-medium text-xs md:text-sm cursor-pointer text-white bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border border-blue-500/25"
       : "flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl text-slate-400 font-medium text-xs md:text-sm cursor-pointer transition-all duration-300 hover:bg-white/[0.05] hover:text-slate-100";
 
-    const DisClass = (key) =>
+  const DisClass = (key) =>
     page === key
       ? "flex lg:hidden flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl font-medium text-xs md:text-sm cursor-pointer text-white bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border border-blue-500/25"
       : "flex lg:hidden flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl text-slate-400 font-medium text-xs md:text-sm cursor-pointer transition-all duration-300 hover:bg-white/[0.05] hover:text-slate-100";
@@ -47,6 +48,10 @@ function Navbar({ setPage, page }) {
           </li>
           <li onClick={() => setPage("discover")} className={DisClass("discover")}>
             <RiCompassDiscoverLine className="text-xl md:text-lg shrink-0"></RiCompassDiscoverLine>
+          </li>
+          <li onClick={() => setPage("post")} className={navClass("post")}>
+            <BsFilePostFill className="text-xl md:text-lg shrink-0"></BsFilePostFill>
+            <span className="hidden sm:inline md:inline">Posts</span>
           </li>
         </ul>
 

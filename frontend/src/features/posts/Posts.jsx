@@ -44,7 +44,6 @@ function Posts() {
       setImg(file);
     }
   };
-    console.log("posts",posts);
 
   return (
     <>

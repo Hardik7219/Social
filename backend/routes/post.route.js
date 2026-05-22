@@ -1,6 +1,6 @@
 import express from 'express'
 import { protectedRoute } from '../middleware/middleware.js';
-import { allPosts, commentPost, createPost, deletePost, likePost, userPost } from '../controllers/post.controller.js';
+import { allPosts, commentPost, createPost, deletePost, getFollowerPost, likePost, userPost } from '../controllers/post.controller.js';
 import upload
 from "../middleware/upload.js";
 
@@ -12,4 +12,5 @@ route.post('/comment/:postId',protectedRoute,commentPost)
 route.post('/delete/:postId',protectedRoute,deletePost)
 route.get('/posts',protectedRoute,allPosts)
 route.get('/userPosts/:id',protectedRoute,userPost)
+route.get("/getfollowerpost",protectedRoute,getFollowerPost)
 export default route;

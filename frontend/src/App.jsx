@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom'
 import PrivateRoute from "./routes/PrivateRoute"
 import Login from "./features/auth/login/Login"
+import FollowerList from "./features/followersPage/FollowerList"
+import FollowingList from "./features/followingPage/FollowingList"
 
 function App() {
 
@@ -27,9 +29,17 @@ function App() {
               path="/profile/:id"
               element={<ProfilePage />}
             />
-             <Route
+            <Route
               path="/chatsec/:id"
               element={<ChatSection />}
+            />
+            <Route
+              path="/followers/:id"
+              element={<FollowerList />}
+            />
+            <Route
+              path="/followings/:id"
+              element={<FollowingList />}
             />
             <Route element={<Signup />} path="/signup"></Route>
           </Routes>

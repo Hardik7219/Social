@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect } from 'react'
 import { deleteNotifications, getNotifications } from '../../services/notification.servive'
 import { useState } from 'react'
@@ -35,7 +34,7 @@ function Notifications() {
         data.map((e) => (
           <div
             key={e._id}
-            className="glass-panel rounded-xl p-4 flex items-start gap-4 border border-white/[0.06] hover:border-blue-500/20 transition-all duration-300"
+            className="glass-panel rounded-xl p-4 flex items-start gap-4 border border-white/6 hover:border-blue-500/20 transition-all duration-300"
           >
             <div className="shrink-0 h-10 w-10 rounded-full flex items-center justify-center bg-blue-500/15 border border-blue-500/25">
               {e.type=="like" ? (
