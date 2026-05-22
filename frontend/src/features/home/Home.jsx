@@ -8,6 +8,7 @@ import Chat from "../chats/Chat";
 
 import Discover from "../discover/Discover";
 import FollowerPost from "../followersPosts/FollowerPost";
+import Search from "../search/Search";
 
 function Home() {
 
@@ -44,6 +45,9 @@ function Home() {
                     </div>
                     {page === "post" && (
                         <FollowerPost />
+                    )}
+                    {page === "search" && (
+                        <Search/>
                     )}
                 </main>
                 <aside className="hidden lg:flex w-72 border-l border-white/6 fixed right-0 top-0 h-screen glass-panel-strong z-40 flex-col p-5 overflow-y-auto">

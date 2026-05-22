@@ -122,7 +122,7 @@ function ProfilePage() {
   });
   if (profileLoading || postsLoading) {
 
-    return <div>
+    return <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
       <SkeletonProfile></SkeletonProfile>
       <SkeletonPost></SkeletonPost>
     </div>;

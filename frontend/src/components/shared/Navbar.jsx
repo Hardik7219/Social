@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { RiCompassDiscoverLine } from "react-icons/ri";
 import { BsFilePostFill } from "react-icons/bs";
+import { FaSearch } from "react-icons/fa";
 
 
 function Navbar({ setPage, page }) {
@@ -42,6 +43,14 @@ function Navbar({ setPage, page }) {
             <IoChatbubbleEllipsesOutline className="text-xl md:text-lg shrink-0" />
             <span className="hidden sm:inline md:inline">Chat</span>
           </li>
+          <li onClick={() => setPage("post")} className={navClass("post")}>
+            <BsFilePostFill className="text-xl md:text-lg shrink-0"></BsFilePostFill>
+            <span className="hidden sm:inline md:inline">Posts</span>
+          </li>
+          <li onClick={() => setPage("search")} className={navClass("search")}>
+            <FaSearch className="text-xl md:text-lg shrink-0"></FaSearch>
+            <span className="hidden sm:inline md:inline">Search</span>
+          </li>
           <li onClick={() => setPage("notifiation")} className={navClass("notifiation")}>
             <IoIosNotificationsOutline className="text-xl md:text-lg shrink-0" />
             <span className="hidden sm:inline md:inline">Alerts</span>
@@ -49,10 +58,7 @@ function Navbar({ setPage, page }) {
           <li onClick={() => setPage("discover")} className={DisClass("discover")}>
             <RiCompassDiscoverLine className="text-xl md:text-lg shrink-0"></RiCompassDiscoverLine>
           </li>
-          <li onClick={() => setPage("post")} className={navClass("post")}>
-            <BsFilePostFill className="text-xl md:text-lg shrink-0"></BsFilePostFill>
-            <span className="hidden sm:inline md:inline">Posts</span>
-          </li>
+
         </ul>
 
         <div className="divider-glow my-0 md:my-4 hidden md:block" />

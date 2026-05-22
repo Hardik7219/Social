@@ -134,7 +134,7 @@ export const updateProfile = async (req, res) => {
 export const getUserFollowers = async (req, res) => {
     try {
 
-        const { id } = req.params;   
+        const { id } = req.params;
         const user = await User.findById(id)
             .populate({
                 path: "followers",
@@ -170,7 +170,7 @@ export const getUserFollowings = async (req, res) => {
     try {
 
         const { id } = req.params;
-        
+
         const user = await User.findById(id)
             .populate({
                 path: "following",
@@ -184,7 +184,7 @@ export const getUserFollowings = async (req, res) => {
                 success: false,
                 message: "User not found"
             });
-        }        
+        }
         return res.status(200).json({
             success: true,
             followings: user.following
@@ -200,3 +200,54 @@ export const getUserFollowings = async (req, res) => {
         });
     }
 };
+
+export const searchUser = async (req, res) => {
+    try {
+
+        const { q } = req.query;
+        if (!q || q.trim() === "") {
+            return res.status(400).json({
+                message: "Search query required"
+            });
+        }
+
+        const users = await User.find({
+
+            $or: [
+
+                {
+                    username: {
+                        $regex: q,
+                        $options: "i"
+                    }
+                },
+
+                {
+                    name: {
+                        $regex: q,
+                        $options: "i"
+                    }
+                }
+
+            ]
+
+        })
+            .select("username name avatar")
+            .limit(10)
+            .lean();
+
+        return res.status(200).json({
+            success: true,
+            users
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+}

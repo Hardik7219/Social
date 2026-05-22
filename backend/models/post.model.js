@@ -22,6 +22,11 @@ const postSchema = new mongoose.Schema({
             ref: 'User',
         }
     }],
+    type: {
+        type: String,
+        enum: ["normal","code"],
+        default: "text"
+    },
     img: {
         type: String,
     },
