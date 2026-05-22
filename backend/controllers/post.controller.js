@@ -143,7 +143,10 @@ export const getFollowerPost = async (req, res) => {
         const ids = await User.findById(Id).select("following");
         const posts = await Post.find({ userId: ids.following }).populate({
             path:'userId',
-            select:"username name"
+            select:"username name avatar"
+        }).populate({
+            path: 'comments.userComment',
+            select: '-password'
         })
         res.status(200).json({ posts })
 

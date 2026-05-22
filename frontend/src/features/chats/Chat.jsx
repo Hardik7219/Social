@@ -30,7 +30,15 @@ function Chat() {
                 to={`/chatsec/${e._id}`}
                 className="suggestion-card flex items-center gap-4 group"
               >
-                <div className="avatar-placeholder h-12 w-12 shrink-0 group-hover:scale-105 transition-transform duration-300" />
+                {e.avatar ? (
+                  <img
+                    src={e.avatar}
+                    alt={e.username}
+                    className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                  />
+                ) : (
+                  <div className="avatar-placeholder h-12 w-12  shrink-0" />
+                )}
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">
                     {e.name}

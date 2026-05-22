@@ -1,11 +1,19 @@
 import { Link } from 'react-router-dom'
 
-function UserUi({id,username,name}) {
+function UserUi({ id, avatar,username, name }) {
   return (
     <div>
-      <div  className="suggestion-card">
+      <div className="suggestion-card">
         <div className="flex items-center gap-3 mb-2">
-          <div className="avatar-placeholder h-10 w-10" />
+          {avatar ? (
+            <img
+              src={avatar}
+              alt={username}
+              className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+            />
+          ) : (
+            <div className="avatar-placeholder h-12 w-12  shrink-0" />
+          )}
           <h3 className="font-semibold text-white truncate">
             <Link
               to={`/profile/${id}`}

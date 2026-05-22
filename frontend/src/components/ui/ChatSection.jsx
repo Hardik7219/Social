@@ -13,19 +13,23 @@ function ChatSection() {
     const [msg, setMsg] = useState();
     const [name, setName] = useState()
     const { user } = useAuth();
+    const [avatar,setAvatar]= useState()
     useEffect(() => {
         const fetchChats = async () => {
             const res = await getChats(id)
+            console.log(res);
+            
             setData(res.msgs)
             if (res.msgs.length > 0) {
 
                 setName(
                     res.msgs[0].receiId.username
                 );
+                setAvatar(res.msgs[0].receiId.avatar)
             }
         }
         fetchChats();
-    })
+    },[])
     useEffect(() => {
 
         if (user?._id) {
@@ -90,7 +94,15 @@ function ChatSection() {
                     >
                         <IoArrowBack className="text-xl" />
                     </Link>
-                    <div className='avatar-placeholder h-11 w-11 shrink-0' />
+                    {avatar ? (
+                        <img
+                            src={avatar}
+                            alt={name}
+                            className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                        />
+                    ) : (
+                        <div className="avatar-placeholder h-12 w-12  shrink-0" />
+                    )}
                     <div className="min-w-0">
                         {name && (
                             <p className="font-semibold text-white truncate">{name}</p>

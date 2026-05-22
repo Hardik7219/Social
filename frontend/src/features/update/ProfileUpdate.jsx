@@ -5,10 +5,15 @@ import { BsPersonVideo } from "react-icons/bs";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineDescription } from "react-icons/md";
-
+import { useQueryClient } from "@tanstack/react-query";
+import useAuth from "../../hooks/useAuth";
+import { updateProfile } from "../../services/user.servive";
 
 function ProfileUpdate() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user, login, loading: authLoading } = useAuth();
   const imageRef = useRef();
 
   const [formData, setFormData] = useState({
@@ -23,26 +28,84 @@ function ProfileUpdate() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (authLoading) return;
 
+    if (!user || user._id !== id) {
+      navigate(user?._id ? `/profile/${user._id}` : "/login");
+      return;
+    }
+
+    setFormData({
+      username: user.username || "",
+      name: user.name || "",
+      bio: user.bio || "",
+    });
+    if (user.avatar) {
+      setAvatarPreview(user.avatar);
+    }
+  }, [user, id, authLoading, navigate]);
 
   const handleChange = (e) => {
-  
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleAvatarChange = (e) => {
-  
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const handleUpdateClick = (e) => {
-
+    e.preventDefault();
+    setError("");
+    setShowPasswordModal(true);
   };
 
   const handleConfirmUpdate = async () => {
+    if (!password) {
+      setError("Please enter your password");
+      return;
+    }
 
-    }   
+    setLoading(true);
+    setError("");
 
+    try {
+      const payload = new FormData();
+      payload.append("username", formData.username);
+      payload.append("name", formData.name);
+      payload.append("bio", formData.bio);
+      payload.append("currentPassword", password);
+      if (avatarFile) {
+        payload.append("avatar", avatarFile);
+      }
 
+      const data = await updateProfile(payload);
+      login(data.user);
+      queryClient.invalidateQueries({ queryKey: ["profile", id] });
+      setShowPasswordModal(false);
+      setPassword("");
+      navigate(`/profile/${id}`);
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        "Update failed. Please try again.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen max-w-lg mx-auto px-4 sm:px-6 py-8 flex items-center justify-center">
+        <p className="text-slate-500 text-sm">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen max-w-lg mx-auto px-4 sm:px-6 py-8 animate-fade-in">
@@ -174,6 +237,9 @@ function ProfileUpdate() {
                 value={password}
                 className="input-glass"
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleConfirmUpdate();
+                }}
                 autoFocus
               />
             </div>

@@ -199,7 +199,15 @@ function Post({ post }) {
                 )}
 
                 <header className="flex items-center gap-3 p-5 pb-3">
-                    <div className="avatar-placeholder h-12 w-12" />
+                    {post?.userId.avatar ? (
+                        <img
+                            src={post?.userId.avatar}
+                            alt={post.userId.username}
+                            className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                        />
+                    ) : (
+                        <div className="avatar-placeholder h-12 w-12  shrink-0" />
+                    )}
                     <div className="flex-1 min-w-0">
                         <Link
                             to={`/profile/${post.userId._id}`}
@@ -274,7 +282,7 @@ function Post({ post }) {
                         <div className="space-y-3">
                             {post.comments && (
                                 post.comments.map((e) => (
-                                    <Comment key={e._id ?? e.userComment?._id} id={e.userComment._id} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
+                                    <Comment key={e._id ?? e.userComment?._id} id={e.userComment._id} avatar={e.userComment.avatar} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
                                 ))
                             )}
                         </div>

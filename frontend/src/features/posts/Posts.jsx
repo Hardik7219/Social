@@ -8,13 +8,14 @@ import { FaRegImage } from "react-icons/fa6";
 import { useQuery} from "@tanstack/react-query";
 
 import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost';
+import useAuth from '../../hooks/useAuth';
 
 function Posts() {
   // const [posts, setPosts] = useState()
   const [title, setTitle] = useState("");
   const imageRef = useRef();
   const [img, setImg] = useState(null)
-
+  const {user} = useAuth();
   const {
     data: posts,
     isLoading,
@@ -48,7 +49,15 @@ function Posts() {
   return (
     <>
       <div className='flex glass-panel rounded-2xl items-start mb-8 p-5 sm:p-6 gap-4 neon-ring animate-fade-in-up'>
-        <div className="avatar-placeholder h-14 w-14 sm:h-16 sm:w-16 shrink-0" />
+        {user.avatar ? (
+                        <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="h-14 w-14  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                        />
+                    ) : (
+                        <div className="avatar-placeholder h-14 w-14  shrink-0" />
+                    )}
         <form onSubmit={handleSubmit} className='flex flex-1 min-w-0 gap-4 flex-col'>
           <div className="w-full">
             <textarea

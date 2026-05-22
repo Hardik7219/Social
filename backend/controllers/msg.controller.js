@@ -176,7 +176,7 @@ export const getChats = async (req,res)=>{
 
             }).sort({
                 createdAt: 1
-            }).populate("receiId");
+            }).populate("receiId")            
 
         return res.status(200).json({
             msgs

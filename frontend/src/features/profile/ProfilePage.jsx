@@ -120,9 +120,6 @@ function ProfilePage() {
       });
     }
   });
-  const updateProfile = async () => {
-
-  }
   if (profileLoading || postsLoading) {
 
     return <div>
@@ -150,33 +147,41 @@ function ProfilePage() {
             <IoArrowBack className="text-xl" />
           </Link>
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28" />
+            {profile?.avatar ? (
+              <img
+                src={profile.avatar}
+                alt={profile.username}
+                className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+              />
+            ) : (
+              <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
+            )}
             <div className="flex-1 text-center sm:text-left min-w-0">
               <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
               <p className="text-slate-400 mt-1">{profile.name}</p>
+              {profile.bio && (
+                <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>
+              )}
               <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p>
             </div>
             <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
               <div  className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
-                <button disabled={followMutation.isPending}
-                  onClick={() => {
-                    otherUser
-                      ? followMutation.mutate()
-                      : updateProfile()
-                  }}
-
-                  className={
-                    isFollowing
-                      ? "btn-ghost"
-                      : "btn-primary"
-                  }
-                >
-                  {
-                    otherUser
-                      ? (isFollowing ? "Following" : "Follow")
-                      : (<Link to={`/update/${profile?._id}`}>Update Profile</Link>)
-                  }
-                </button>
+                {otherUser ? (
+                  <button
+                    disabled={followMutation.isPending}
+                    onClick={() => followMutation.mutate()}
+                    className={isFollowing ? "btn-ghost" : "btn-primary"}
+                  >
+                    {isFollowing ? "Following" : "Follow"}
+                  </button>
+                ) : (
+                  <Link
+                    to={`/update/${profile?._id}`}
+                    className="btn-primary"
+                  >
+                    Update Profile
+                  </Link>
+                )}
                 {otherUser && (
                   <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
                     Message

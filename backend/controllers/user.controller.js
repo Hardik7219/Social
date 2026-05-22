@@ -1,6 +1,7 @@
 import Notification from "../models/notification.model.js";
 import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs'
+import cloudinary from "../config/cloudinary.js";
 
 export const getProfile = async (req, res) => {
     try {
@@ -78,18 +79,55 @@ export const suggestedFollower = async (req, res) => {
 }
 export const updateProfile = async (req, res) => {
     try {
-        const { email, currentPassword, newPassword } = req.body;
+        const { username, name, bio, currentPassword } = req.body;
         const user = await User.findById(req.user._id);
-        if (currentPassword || newPassword) {
-            const isMatch = await bcrypt.compare(currentPassword, user.password)
-            if (!isMatch) return res.json({ status: 401, message: "password is wrong" })
-
-            if (newPassword.lenth < 6) return res.json({ status: 401, message: 'password must 6 character long' })
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
 
+        if (!currentPassword) {
+            return res.status(400).json({ message: "Password is required" });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Password is wrong" });
+        }
+
+        if (username && username !== user.username) {
+            const existing = await User.findOne({ username });
+            if (existing) {
+                return res.status(400).json({ message: "Username is already taken" });
+            }
+        }
+
+        const updates = {};
+        if (username) updates.username = username.trim();
+        if (name !== undefined) updates.name = name.trim();
+        if (bio !== undefined) updates.bio = bio.trim();
+
+        if (req.file) {
+            if (user.avatarPublicId) {
+                await cloudinary.uploader.destroy(user.avatarPublicId);
+            }
+            const uploadedResponse = await cloudinary.uploader.upload(req.file.path);
+            updates.avatar = uploadedResponse.secure_url;
+            updates.avatarPublicId = uploadedResponse.public_id;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            updates,
+            { new: true }
+        ).select("-password");
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user: updatedUser
+        });
     } catch (error) {
-        console.log(error)
-        res.json({ status: 500, message: "internal server error" })
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -100,7 +138,7 @@ export const getUserFollowers = async (req, res) => {
         const user = await User.findById(id)
             .populate({
                 path: "followers",
-                select: "username name _id"
+                select: "username name avatar _id"
             })
             .lean();
 

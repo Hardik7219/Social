@@ -32,7 +32,7 @@ function FollowerList() {
                         {users && (
                             users.map((e) => (
                                 <div key={e?._id}>
-                                    <UserUi id={e._id} username={e.username} name={e.name}></UserUi>
+                                    <UserUi id={e._id} username={e.username} avatar={e.avatar} name={e.name}></UserUi>
                                 </div>
                             ))
                         )}

@@ -29,3 +29,8 @@ export const getUserFollowers = async (id) =>{
     const res = await API.get(`/user/getfollowers/${id}`)
     return res.data.followers;
 }
+
+export const updateProfile = async (formData) => {
+    const res = await API.put("/user/update", formData);
+    return res.data;
+}
