@@ -25,15 +25,16 @@ function Navbar({ setPage, page }) {
   return (
     <>
       <div className='h-full w-full flex flex-row md:flex-col justify-around md:justify-between p-2 md:p-4 lg:p-5'>
-        <div className="mb-0 md:mb-6 hidden md:block px-2">
-          <img
-            src='/logo.png'
-            className='w-full max-h-96 object-contain'
-            alt=''
-          />
-          <p className="text-xs text-slate-500 mt-0.5">Connect · Share · Grow</p>
+        <div className="mb-0 md:mb-6 hidden md:block ">
+          <Link to="/">
+            <img
+              src='/logo.png'
+              className='w-full max-h-50 hover:cursor-pointer  object-contain'
+              alt=''
+            />
+          </Link>
         </div>
-
+        <div className="divider-glow my-0 md:my-4 hidden md:block" />
         <ul className='flex flex-row md:flex-col flex-1 md:flex-none gap-1 md:gap-1.5 justify-around md:justify-start items-center md:items-stretch'>
           <li onClick={() => setPage("posts")} className={navClass("posts")}>
             <AiOutlineHome className="text-xl md:text-lg shrink-0" />
