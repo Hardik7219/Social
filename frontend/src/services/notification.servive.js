@@ -1,9 +1,7 @@
 import API  from "../lib/axios";
 
 export const getNotifications = async ()=>{    
-    const res = await API.get('/notification')    
-    console.log(res);
-    
+    const res = await API.get('/notification')        
     return res.data;    
 }
 

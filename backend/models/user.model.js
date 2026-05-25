@@ -34,16 +34,16 @@ const userSchema = new mongoose.Schema({
         ref: 'User',
         default: [],
     }],
-    messages: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Msg'
-        }
-    ],
-    msgUsers :[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-    }],
+    // messages: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Msg'
+    //     }
+    // ],
+    // msgUsers :[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    // }],
     bio: {
         type: String
     }

@@ -10,7 +10,7 @@ export const sendMsg = async (
 ) => {
 
     try {
-        
+
         const { msg } = req.body;
 
         const { id } = req.params;
@@ -56,30 +56,30 @@ export const sendMsg = async (
             message: msg
         });
 
-        user.messages.push(newMsg._id);
+        // user.messages.push(newMsg._id);
 
-        resUser.messages.push(newMsg._id);
+        // resUser.messages.push(newMsg._id);
 
-        // optional add chat users
-        if (
-            !user.msgUsers.includes(id)
-        ) {
+        // // optional add chat users
+        // if (
+        //     !user.msgUsers.includes(id)
+        // ) {
 
-            user.msgUsers.push(id);
-        }
+        //     user.msgUsers.push(id);
+        // }
 
-        if (
-            !resUser.msgUsers.includes(
-                senderId
-            )
-        ) {
+        // if (
+        //     !resUser.msgUsers.includes(
+        //         senderId
+        //     )
+        // ) {
 
-            resUser.msgUsers.push(senderId);
-        }
+        //     resUser.msgUsers.push(senderId);
+        // }
 
-        await user.save();
+        // await user.save();
 
-        await resUser.save();
+        // await resUser.save();
 
         return res.status(200).json({
 
@@ -112,8 +112,7 @@ export const oldChatUsers = async (
         const user = await User.findById(
             userId
         )
-            .populate("msgUsers")
-            .populate("following");
+            .populate("following", "username name avatar id");
 
         if (!user) {
 
@@ -121,20 +120,22 @@ export const oldChatUsers = async (
                 message: "user not found"
             });
         }
-
-        if (
-            user.msgUsers &&
-            user.msgUsers.length > 0
-        ) {
-
+        const msgUsers = await Msg.distinct(
+            "receiId",
+            { senderId: userId }
+        ).then(async (receiverIds) => {
+            const senderIds = await Msg.distinct("senderId", { receiId: userId });
+            const allIds = [...new Set([...receiverIds, ...senderIds])];
+            return User.find({ _id: { $in: allIds } }).select("username name avatar id");
+        });
+        if (msgUsers) {
             return res.status(200).json({
 
                 success: true,
 
-                users: user.msgUsers
+                users: msgUsers
             });
         }
-
         return res.status(200).json({
 
             success: true,
@@ -155,35 +156,36 @@ export const oldChatUsers = async (
     }
 };
 
-export const getChats = async (req,res)=>{
+export const getChats = async (req, res) => {
     try {
-        const {id} = req.params
+        const { id } = req.params
         const userId = req.user._id
         const msgs = await Msg.find({
-                $or: [
+            $or: [
 
-                    {
-                        senderId: userId,
-                        receiId: id,
-                    },
+                {
+                    senderId: userId,
+                    receiId: id,
+                },
 
-                    {
-                        senderId: id,
-                        receiId: userId
-                    },
+                {
+                    senderId: id,
+                    receiId: userId
+                },
 
-                ],
+            ],
 
-            }).sort({
-                createdAt: 1
-            }).populate("receiId")            
-
+        }).sort({
+            createdAt: 1
+        })
+        const user = await User.findById(id).select("username name _id avatar")        
         return res.status(200).json({
-            msgs
+            msgs,
+            user
         });
 
     } catch (error) {
-                console.log(error);
+        console.log(error);
 
         return res.status(500).json({
 

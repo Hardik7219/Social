@@ -9,9 +9,7 @@ export const sendChat = async (id,msg)=>{
 
 export const getChats = async (id)=>
 {
-    const res = await API.get(`/msg/getMsg/${id}`)
-    console.log(res);
-    
+    const res = await API.get(`/msg/getMsg/${id}`)   
     return res.data
     
 }

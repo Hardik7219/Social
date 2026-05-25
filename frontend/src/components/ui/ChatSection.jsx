@@ -13,23 +13,21 @@ function ChatSection() {
     const [msg, setMsg] = useState();
     const [name, setName] = useState()
     const { user } = useAuth();
-    const [avatar,setAvatar]= useState()
+    const [avatar, setAvatar] = useState()
     useEffect(() => {
         const fetchChats = async () => {
             const res = await getChats(id)
             console.log(res);
-            
-            setData(res.msgs)
-            if (res.msgs.length > 0) {
 
-                setName(
-                    res.msgs[0].receiId.username
-                );
-                setAvatar(res.msgs[0].receiId.avatar)
-            }
+            setData(res.msgs)
+            console.log(res.msgs);
+
+
+            setName(res.user.username)
+            setAvatar(res.user.avatar)
         }
         fetchChats();
-    },[])
+    }, [])
     useEffect(() => {
 
         if (user?._id) {

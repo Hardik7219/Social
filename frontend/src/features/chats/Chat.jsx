@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect } from 'react'
 import { oldChatUsers } from '../../services/chat.service'
 import { useState } from 'react'
@@ -13,7 +12,7 @@ function Chat() {
       setData(res.users)
     }
     fetchUser();
-  })
+  }, [])
   return (
     <>
       <div className="animate-fade-in">
