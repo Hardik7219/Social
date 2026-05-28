@@ -1,6 +1,6 @@
-# Social — Developer Social Platform
+# Social — Hx1c33
 
-A full-stack social media app built for developers. Share posts, snippets of code, follow other devs, and chat in real time.
+A full-stack social media app. Share posts, snippets of code, follow other users, and chat in real time.
 
 ---
 
@@ -37,7 +37,7 @@ A full-stack social media app built for developers. Share posts, snippets of cod
 | Framework | React  |
 | Routing | React Router  |
 | Data fetching | TanStack Query  |
-| Styling | Tailwind CSS v4 |
+| Styling | Tailwind CSS  |
 | HTTP client | Axios |
 | Real-time | Socket.IO Client |
 | Code highlighting | react-syntax-highlighter |
