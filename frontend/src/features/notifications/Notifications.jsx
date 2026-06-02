@@ -2,8 +2,6 @@ import { useEffect } from 'react'
 import { deleteNotifications, getNotifications } from '../../services/notification.servive'
 import { useState } from 'react'
 import { IoNotificationsOutline } from 'react-icons/io5';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { IoPersonAddOutline } from 'react-icons/io5';
 import Notification from '../../components/ui/Notification';
 
 function Notifications() {

@@ -10,19 +10,14 @@ import useAuth from '../../hooks/useAuth';
 function ChatSection() {
     const { id } = useParams();
     const [data, setData] = useState([]);
-    const [msg, setMsg] = useState();
+    const [msg, setMsg] = useState("");
     const [name, setName] = useState()
     const { user } = useAuth();
     const [avatar, setAvatar] = useState()
     useEffect(() => {
         const fetchChats = async () => {
             const res = await getChats(id)
-            console.log(res);
-
             setData(res.msgs)
-            console.log(res.msgs);
-
-
             setName(res.user.username)
             setAvatar(res.user.avatar)
         }

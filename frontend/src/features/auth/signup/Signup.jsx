@@ -33,7 +33,6 @@ function Signup() {
         } catch (error) {
             const message = error.response?.data?.message || "Signup failed. Please try again.";
             setError(message);
-            console.log(error.response?.data);
         } finally {
             setLoading(false);
         }

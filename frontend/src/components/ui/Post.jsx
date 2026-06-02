@@ -354,7 +354,8 @@ function Post({ post }) {
                         className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors duration-300 group"
                     >
                         <BiCommentDetail className="text-lg group-hover:scale-110 transition-transform" />
-                        <span className="hidden sm:inline"><span className="font-medium">{post.comments?.length ?? 0}</span> Comments</span>
+                        <span className="font-medium">{post.comments?.length ?? 0}</span> 
+                        <span className="hidden sm:inline">Comments</span>
                     </button>
                 </footer>
 

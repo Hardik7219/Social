@@ -20,9 +20,7 @@ const AuthProvider = ({ children }) => {
                 setUser(response.data.user);
             } catch (error) {
                 console.log(error);
-
                 localStorage.removeItem("user");
-
                 setUser(null);
             } finally {
                 setLoading(false);
