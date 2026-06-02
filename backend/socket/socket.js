@@ -18,14 +18,10 @@ export const initSocket = (server) => {
 
     io.on("connection", (socket) => {
 
-        console.log("User connected:", socket.id);
-
         // add user
         socket.on("add_user", (userId) => {
 
             users[userId] = socket.id;
-
-            console.log(users);
         });
 
         // send message
@@ -46,9 +42,6 @@ export const initSocket = (server) => {
         });
 
         socket.on("disconnect", () => {
-
-            console.log("Disconnected");
-
             for (const key in users) {
 
                 if (users[key] === socket.id) {
