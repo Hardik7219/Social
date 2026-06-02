@@ -69,13 +69,13 @@ function ChatSection() {
                 ...res
             }
         );
-
+        setMsg("");
         setData((prev) => [
             ...prev,
             res
         ]);
 
-        setMsg("");
+        
     };
     return (
         <>

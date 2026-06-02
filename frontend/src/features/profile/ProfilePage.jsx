@@ -162,7 +162,7 @@ function ProfilePage() {
               {profile.bio && (
                 <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>
               )}
-              <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p>
+              {/* <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p> */}
             </div>
             <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
               <div  className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>

@@ -154,7 +154,7 @@ function ProfileUpdate() {
               onChange={handleAvatarChange}
             />
           </div>
-
+            <p className="text-sm text-slate-500 mt-2 truncate">{formData.email}</p>
           <div className="auth-input-group">
             <label className="text-slate-400 shrink-0">
               <BsPersonVideo className="text-xl" />
