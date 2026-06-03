@@ -194,9 +194,11 @@ function ProfilePage() {
               </div>
             </div>
           </div>
+          {!otherUser && ( 
             <div className='flex justify-end mt-2' onClick={userLogout}>
                 <button className='bg-rose-700 rounded-lg p-2 btn-ghost'>Logout</button>
             </div>
+          )}
         </header>
       )}
 
