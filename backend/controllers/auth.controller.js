@@ -71,7 +71,11 @@ export const getData = async (req, res) => {
 }
 export const logout = async (req, res) => {
     try {
-        res.cookie("jwt", "", { maxAge: 0 });
+        res.clearCookie("jwt", {
+   httpOnly: true,
+   secure: true,
+   sameSite: "strict"
+});
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.log("Error in logout controller", error.message);
