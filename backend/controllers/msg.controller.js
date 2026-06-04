@@ -31,7 +31,6 @@ export const sendMsg = async (
             id
         );
 
-        // check sender
         if (!user) {
 
             return res.status(404).json({
@@ -39,7 +38,6 @@ export const sendMsg = async (
             });
         }
 
-        // check receiver
         if (!resUser) {
 
             return res.status(404).json({
@@ -55,32 +53,6 @@ export const sendMsg = async (
 
             message: msg
         });
-
-        // user.messages.push(newMsg._id);
-
-        // resUser.messages.push(newMsg._id);
-
-        // // optional add chat users
-        // if (
-        //     !user.msgUsers.includes(id)
-        // ) {
-
-        //     user.msgUsers.push(id);
-        // }
-
-        // if (
-        //     !resUser.msgUsers.includes(
-        //         senderId
-        //     )
-        // ) {
-
-        //     resUser.msgUsers.push(senderId);
-        // }
-
-        // await user.save();
-
-        // await resUser.save();
-
         return res.status(200).json({
 
             success: true,

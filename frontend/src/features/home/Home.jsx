@@ -11,11 +11,42 @@ import FollowerPost from "../followersPosts/FollowerPost";
 import Search from "../search/Search";
 import { useEffect } from "react";
 import socket from "../../socket/socket";
+import { getUnreadNotificationCount } from "../../services/notification.servive";
 function Home() {
 
     const [page, setPage] = useState("posts");
     const [notificationCount, setNotificationCount] = useState(0);
     useEffect(() => {
+
+        socket.on("connect", () => {
+            console.log("Socket connected:", socket.id);
+        });
+
+        socket.on("receive_notification", () => {
+            console.log("notification received");
+            setNotificationCount((prev) => prev + 1);
+        });
+
+    }, []);
+    useEffect(() => {
+
+        const fetchUnreadCount = async () => {
+
+            try {
+
+                const res = await getUnreadNotificationCount();
+
+                setNotificationCount(res.unreadCount);
+
+            } catch (error) {
+
+                console.log(error);
+
+            }
+
+        };
+
+        fetchUnreadCount();
 
         socket.on(
             "receive_notification",
@@ -27,7 +58,9 @@ function Home() {
         );
 
         return () => {
+
             socket.off("receive_notification");
+
         };
 
     }, []);
