@@ -38,7 +38,7 @@ function Comment({ id, username, name, commentId, postId, comment, time, avatar 
               <p className="text-slate-300 text-sm font-medium">Delete this comment?</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteSure(false)} className="btn-ghost">Cancel</button>
-                <button className="btn-danger" onClick={handleDelete}>{deleting ? ("Delete") :("Deleting")}</button>
+                <button className="btn-danger" onClick={handleDelete}>{deleting ? ("Deleting..") :("Delete")}</button>
               </div>
             </div>
           )}
