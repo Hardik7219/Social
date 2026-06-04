@@ -10,7 +10,7 @@ import { BsFilePostFill } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 
 
-function Navbar({ setPage, page, notificationCount }) {
+function Navbar({ setPage, page, notificationCount, msgCount }) {
   const { user } = useAuth()
 
   const navClass = (key) =>
@@ -40,8 +40,12 @@ function Navbar({ setPage, page, notificationCount }) {
             <AiOutlineHome className="text-xl md:text-lg shrink-0" />
             <span className="hidden sm:inline md:inline">Home</span>
           </li>
-          <li onClick={() => setPage("chat")} className={navClass("chat")}>
+          <li onClick={() => setPage("chat")} className={`${navClass("chat")} relative`}>
             <IoChatbubbleEllipsesOutline className="text-xl md:text-lg shrink-0" />
+            {msgCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] min-w-4.5 h-4.5 rounded-full flex items-center justify-center px-1 font-semibold">
+                {msgCount > 99 ? "99+" : msgCount}
+              </span>)}
             <span className="hidden sm:inline md:inline">Chat</span>
           </li>
           <li onClick={() => setPage("post")} className={navClass("post")}>

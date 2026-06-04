@@ -15,20 +15,15 @@ export const initSocket = (server) => {
 
     io.on("connection", (socket) => {
 
-        socket.on(
-            "add_user",
-            (userId) => {
-
-                users[userId] = socket.id;
-            }
+        socket.on("add_user", (userId) => {
+            users[userId] = socket.id;
+        }
         );
 
         socket.on(
             "send_message",
             (data) => {
-
-                const receiverSocketId =
-                    users[data.receiverId];
+                const receiverSocketId = users[data.receiverId];
 
                 if (receiverSocketId) {
 
@@ -36,6 +31,7 @@ export const initSocket = (server) => {
                         "receive_message",
                         data
                     );
+                    io.to(receiverSocketId).emit("receive_message_notification");
                 }
             }
         );

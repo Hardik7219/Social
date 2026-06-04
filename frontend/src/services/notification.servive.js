@@ -12,8 +12,7 @@ export const deleteNotifications = async () => {
 }
 export const getUnreadNotificationCount = async () => {
 
-    const res = await API.get('/notification/unread-count"')
-
+    const res = await API.get('/notification/unread-count')
     return res.data;
 
 };

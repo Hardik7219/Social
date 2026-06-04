@@ -1,5 +1,5 @@
 import useAuth from '../../hooks/useAuth'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { follow, getUser } from '../../services/user.servive'
 import { getUserPost } from '../../services/post.servive'
 import Post from '../../components/ui/Post'
@@ -8,12 +8,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost'
 import SkeletonProfile from '../../components/ui/skelotonLoaders/SkeletonProfile'
 import { IoArrowBack } from 'react-icons/io5'
-import { logout } from '../../services/auth.service'
 function ProfilePage() {
-  const { user } = useAuth()
+  const { user, logout, loading: authLoading } = useAuth()
   const { id } = useParams()
   const queryClient = useQueryClient();
   const otherUser = id !== user?._id;
+  const navigate = useNavigate()
   const {
 
     data: profile,
@@ -33,7 +33,7 @@ function ProfilePage() {
       return await getUser(id);
     },
 
-    enabled: !!user
+    enabled: !!user && !authLoading
   })
   const {
 
@@ -120,6 +120,12 @@ function ProfilePage() {
       });
     }
   });
+  if (authLoading) {
+    return <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
+      <SkeletonProfile />
+      <SkeletonPost />
+    </div>;
+  }
   if (profileLoading || postsLoading) {
 
     return <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
@@ -127,8 +133,9 @@ function ProfilePage() {
       <SkeletonPost></SkeletonPost>
     </div>;
   }
-  const userLogout = async ()=>{
+  const userLogout = async () => {
     await logout();
+    navigate('/login');
   }
   if (postsError || profileError) {
     return <h1>error</h1>
@@ -165,7 +172,7 @@ function ProfilePage() {
               {/* <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p> */}
             </div>
             <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
-              <div  className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+              <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
                 {otherUser ? (
                   <button
                     disabled={followMutation.isPending}
@@ -194,9 +201,9 @@ function ProfilePage() {
               </div>
             </div>
           </div>
-          {!otherUser && ( 
+          {!otherUser && (
             <div className='flex justify-end mt-2' >
-                <button className='bg-rose-700 rounded-lg p-2 btn-ghost' onClick={userLogout}>Logout</button>
+              <button className='bg-rose-700 rounded-lg p-2 btn-ghost' onClick={userLogout}>Logout</button>
             </div>
           )}
         </header>

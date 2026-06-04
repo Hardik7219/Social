@@ -16,54 +16,41 @@ function Home() {
 
     const [page, setPage] = useState("posts");
     const [notificationCount, setNotificationCount] = useState(0);
+    const [msgCount, setMsgCount] = useState(0);
     useEffect(() => {
-
         socket.on("connect", () => {
             console.log("Socket connected:", socket.id);
         });
 
-        socket.on("receive_notification", () => {
-            console.log("notification received");
-            setNotificationCount((prev) => prev + 1);
-        });
-
-    }, []);
-    useEffect(() => {
-
         const fetchUnreadCount = async () => {
-
             try {
-
                 const res = await getUnreadNotificationCount();
-
                 setNotificationCount(res.unreadCount);
-
             } catch (error) {
-
                 console.log(error);
-
             }
-
         };
 
         fetchUnreadCount();
 
-        socket.on(
-            "receive_notification",
-            () => {
-
-                setNotificationCount((prev) => prev + 1);
-
-            }
-        );
-
+        socket.on("receive_notification", () => {
+            setNotificationCount((prev) => prev + 1);
+        });
+        socket.on("receive_message_notification", () => {
+            setMsgCount((prev) => prev + 1);
+        });
         return () => {
-
             socket.off("receive_notification");
-
+            socket.off("receive_message_notification");
+            socket.off("connect");
         };
-
     }, []);
+    const handleSetPage = (newPage) => {
+        if (newPage === "chat") {
+            setMsgCount(0);
+        }
+        setPage(newPage);
+    };
     return (
 
         <div className="min-h-screen text-white flex justify-center">
@@ -73,18 +60,20 @@ function Home() {
                 {/* LEFT SIDEBAR */}
                 <aside className="hidden md:flex w-20 lg:w-64 border-r border-white/6 fixed left-0 top-0 h-screen glass-panel-strong z-40 flex-col">
                     <Navbar
-                        setPage={setPage}
+                        setPage={handleSetPage}
                         page={page}
                         notificationCount={notificationCount}
+                        msgCount={msgCount} 
                     />
                 </aside>
 
                 {/* MOBILE BOTTOM NAV */}
                 <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel-strong border-t border-white/6 px-2 py-2 safe-area-pb">
                     <Navbar
-                        setPage={setPage}
+                        setPage={handleSetPage}
                         page={page}
                         notificationCount={notificationCount}
+                        msgCount={msgCount}
                     />
                 </nav>
 
