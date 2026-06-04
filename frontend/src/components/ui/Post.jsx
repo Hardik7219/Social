@@ -43,52 +43,30 @@ function Post({ post }) {
         await commentMutation.mutateAsync(c);
         setC("");
     }
-
     const commentMutation = useMutation({
-
         mutationFn: (comment) =>
-
             addComment(post._id, comment),
-
         onMutate: async (comment) => {
-
             await queryClient.cancelQueries({
-
                 queryKey: ["posts", post.userId._id]
             });
-
             const previousPosts =
                 queryClient.getQueryData(["posts"]);
-
             queryClient.setQueryData(
-
                 ["posts"],
-
                 (old) => {
-
                     return old.map((p) => {
-
                         if (p._id === post._id) {
-
                             return {
-
                                 ...p,
-
                                 comments: [
-
                                     ...p.comments,
-
                                     {
-
                                         text: comment,
-
                                         userComment: {
-
                                             _id: user._id,
-
                                             username:
                                                 user.username,
-
                                             name:
                                                 user.name
                                         }
@@ -96,79 +74,54 @@ function Post({ post }) {
                                 ]
                             };
                         }
-
                         return p;
                     });
                 }
             );
-
             return { previousPosts };
         },
-
         onError: (
             err,
             variables,
             context
         ) => {
-
             queryClient.setQueryData(
-
                 ["posts"],
-
                 context.previousPosts
             );
         },
-
         onSettled: () => {
-
             queryClient.invalidateQueries({
-
                 queryKey: ["posts", post.userId._id]
             });
         }
     });
 
     const likeMutation = useMutation({
-
         mutationFn: () => likePost(post._id),
-
         onMutate: async () => {
-
             await queryClient.cancelQueries({
 
                 queryKey: ["posts", post.userId._id]
             });
-
             const previousPosts =
                 queryClient.getQueryData(["posts"]);
-
             queryClient.setQueryData(
-
                 ["posts"],
-
                 (old) => {
-
                     return old.map((p) => {
-
                         if (p._id === post._id) {
-
                             const alreadyLiked =
                                 p.likes.includes(user._id);
-
                             return {
-
                                 ...p,
-
                                 likes: alreadyLiked
-
                                     ? p.likes.filter(
                                         (id) => id !== user._id
                                     )
-
                                     : [...p.likes, user._id]
                             };
                         }
-
                         return p;
                     });
                 }
@@ -176,25 +129,18 @@ function Post({ post }) {
 
             return { previousPosts };
         },
-
         onError: (
             err,
             variables,
             context
         ) => {
-
             queryClient.setQueryData(
-
                 ["posts"],
-
                 context.previousPosts
             );
         },
-
         onSettled: () => {
-
             queryClient.invalidateQueries({
-
                 queryKey: ["posts", post.userId._id]
             });
         }
@@ -216,7 +162,15 @@ function Post({ post }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
-
+    const fullDateTime = (date) => {
+        return new Date(date).toLocaleString([], {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    };
     if (!post) return null;
     return (
         <>
@@ -339,28 +293,35 @@ function Post({ post }) {
                         </div>
                     </div>
                 )}
-                <footer className="px-5 py-3 border-t border-white/6 flex items-center gap-6">
-                    <button
-                        disabled={likeMutation.isPending}
-                        onClick={() => likeMutation.mutate()}
-                        className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
-                    >
-                        {isLiked ? (
-                            <AiTwotoneLike className="text-lg text-cyan-400 group-hover:scale-110 transition-transform"/>
-                        ) :(
-                            <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
-                        )}
-                        <span className="font-medium">{post.likes?.length ?? 0}</span>
-                        <span className="hidden sm:inline">Likes</span>
-                    </button>
-                    <button
-                        onClick={() => setShowComments(current => !current)}
-                        className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors duration-300 group"
-                    >
-                        <BiCommentDetail className="text-lg group-hover:scale-110 transition-transform" />
-                        <span className="font-medium">{post.comments?.length ?? 0}</span> 
-                        <span className="hidden sm:inline">Comments</span>
-                    </button>
+                <footer className="px-5 py-3 border-t border-white/6 flex items-center justify-between gap-6">
+                    <div className="px-5 py-3 border-t border-white/6 flex items-center gap-6">
+                        <button
+                            disabled={likeMutation.isPending}
+                            onClick={() => likeMutation.mutate()}
+                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
+                        >
+                            {isLiked ? (
+                                <AiTwotoneLike className="text-lg text-cyan-400 group-hover:scale-110 transition-transform" />
+                            ) : (
+                                <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
+                            )}
+                            <span className="font-medium">{post.likes?.length ?? 0}</span>
+                            <span className="hidden sm:inline">Likes</span>
+                        </button>
+                        <button
+                            onClick={() => setShowComments(current => !current)}
+                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors duration-300 group"
+                        >
+                            <BiCommentDetail className="text-lg group-hover:scale-110 transition-transform" />
+                            <span className="font-medium">{post.comments?.length ?? 0}</span>
+                            <span className="hidden sm:inline">Comments</span>
+                        </button>
+                    </div>
+                    <div>
+                        <p className="text-[10px] opacity-40">
+                            {fullDateTime(post.createdAt)}
+                        </p>
+                    </div>
                 </footer>
 
                 {showComments && (
@@ -380,7 +341,7 @@ function Post({ post }) {
                         <div className="space-y-3">
                             {post.comments && (
                                 post.comments.map((e) => (
-                                    <Comment key={e._id ?? e.userComment?._id} commentId={e._id} postId={post._id} id={e.userComment._id} avatar={e.userComment.avatar} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
+                                    <Comment key={e._id ?? e.userComment?._id} commentId={e._id} postId={post._id} id={e.userComment._id} time={e?.createdAt} avatar={e.userComment.avatar} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
                                 ))
                             )}
                         </div>

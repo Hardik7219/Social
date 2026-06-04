@@ -20,6 +20,10 @@ const postSchema = new mongoose.Schema({
         userComment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
+        },
+        createdAt:{
+            type:Date,
+            default :new Date()
         }
     }],
     type: {

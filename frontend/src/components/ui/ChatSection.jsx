@@ -129,8 +129,6 @@ function ChatSection() {
                                 <div className='flex justify-between'>
                                     <p>{e.message}</p>
                                     <div className="flex flex-col">
-                                        
-
                                         <p className="text-[10px] opacity-40">
                                             {fullDateTime(e.createdAt)}
                                         </p>

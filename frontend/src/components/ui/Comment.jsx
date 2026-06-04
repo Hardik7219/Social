@@ -5,7 +5,7 @@ import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { deleteComment } from '../../services/post.servive';
 
-function Comment({ id, username, name, commentId, postId, comment, avatar }) {
+function Comment({ id, username, name, commentId, postId, comment, time, avatar }) {
   const { user } = useAuth();
   const [deleteSure, setDeleteSure] = useState(false)
   const otherUser = id !== user?._id;
@@ -63,7 +63,6 @@ function Comment({ id, username, name, commentId, postId, comment, avatar }) {
             {comment}
           </p>
         </div>
-
       </div>
     </>
   )
