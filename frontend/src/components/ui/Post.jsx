@@ -3,7 +3,7 @@ import Comment from "./Comment";
 import useAuth from "../../hooks/useAuth";
 import { addComment, deletePost, likePost } from "../../services/post.servive";
 import { Link } from "react-router-dom";
-import { AiOutlineLike } from "react-icons/ai";
+import { AiOutlineLike, AiTwotoneLike } from "react-icons/ai";
 import { BiCommentDetail } from "react-icons/bi";
 import { HiOutlineTrash } from "react-icons/hi";
 import { FaCode, FaCopy, FaCheck } from "react-icons/fa6";
@@ -345,7 +345,11 @@ function Post({ post }) {
                         onClick={() => likeMutation.mutate()}
                         className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
                     >
-                        <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
+                        {isLiked ? (
+                            <AiTwotoneLike className="text-lg text-cyan-400 group-hover:scale-110 transition-transform"/>
+                        ) :(
+                            <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
+                        )}
                         <span className="font-medium">{post.likes?.length ?? 0}</span>
                         <span className="hidden sm:inline">Likes</span>
                     </button>

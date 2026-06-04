@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'
 import { getChats, sendChat } from '../../services/chat.service';
-import { IoArrowBack } from 'react-icons/io5';
+import { IoArrowBack, IoSend } from 'react-icons/io5';
 
 import { useEffect } from "react";
 import socket
@@ -155,7 +155,7 @@ function ChatSection() {
                             <button
                                 className='btn-primary shrink-0 px-5 py-2.5 text-sm rounded-xl'
                             >
-                                Send
+                                <IoSend />
                             </button>
                         </div>
                     </form>

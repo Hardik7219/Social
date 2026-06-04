@@ -1,13 +1,11 @@
 import { AiOutlineHome } from "react-icons/ai";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import { IoIosNotificationsOutline } from "react-icons/io";
+import { IoChatbubbleEllipsesOutline, IoCompassOutline, IoPeopleOutline} from "react-icons/io5";
+import { IoIosNotificationsOutline, IoMdSearch } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { RiCompassDiscoverLine } from "react-icons/ri";
-import { BsFilePostFill } from "react-icons/bs";
-import { FaSearch } from "react-icons/fa";
+
 
 
 function Navbar({ setPage, page, notificationCount, msgCount }) {
@@ -49,11 +47,11 @@ function Navbar({ setPage, page, notificationCount, msgCount }) {
             <span className="hidden sm:inline md:inline">Chat</span>
           </li>
           <li onClick={() => setPage("post")} className={navClass("post")}>
-            <BsFilePostFill className="text-xl md:text-lg shrink-0"></BsFilePostFill>
+            <IoPeopleOutline className="text-xl md:text-lg shrink-0"/>
             <span className="hidden sm:inline md:inline">Posts</span>
           </li>
           <li onClick={() => setPage("search")} className={navClass("search")}>
-            <FaSearch className="text-xl md:text-lg shrink-0"></FaSearch>
+            <IoMdSearch className="text-xl md:text-lg shrink-0"/>
             <span className="hidden sm:inline md:inline">Search</span>
           </li>
           <li onClick={() => setPage("notifiation")} className={`${navClass("notifiation")} relative`}>
@@ -66,7 +64,7 @@ function Navbar({ setPage, page, notificationCount, msgCount }) {
             <span className="hidden sm:inline md:inline">Alerts</span>
           </li>
           <li onClick={() => setPage("discover")} className={DisClass("discover")}>
-            <RiCompassDiscoverLine className="text-xl md:text-lg shrink-0"></RiCompassDiscoverLine>
+            <IoCompassOutline className="text-xl md:text-lg shrink-0"/>
           </li>
 
         </ul>
@@ -83,10 +81,10 @@ function Navbar({ setPage, page, notificationCount, msgCount }) {
               <span className="hidden sm:inline md:inline">Profile</span>
             </Link>
           </li>
-          <li className='hidden lg:flex nav-item'>
+          {/* <li className='hidden lg:flex nav-item'>
             <IoSettingsOutline className="text-lg shrink-0" />
             <span>Settings</span>
-          </li>
+          </li> */}
         </ul>
       </div>
     </>
