@@ -1,7 +1,7 @@
 import { IoPerson } from "react-icons/io5";
 import { BsPersonVideo } from "react-icons/bs";
 import { MdOutlineMail } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine } from "react-icons/ri";
 import { useState } from "react";
 import { signUp } from "../../../services/auth.service";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ function Signup() {
         name: "",
         password: ""
     })
+    const [showPas, setShowPas] = useState(false)
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -30,6 +31,8 @@ function Signup() {
             if (res.status === 201) {
                 navigate("/login");
             }
+            console.log(res.message);
+            
         } catch (error) {
             const message = error.response?.data?.message || "Signup failed. Please try again.";
             setError(message);
@@ -67,7 +70,18 @@ function Signup() {
                     </div>
                     <div className='auth-input-group'>
                         <label className="text-slate-400 shrink-0"><RiLockPasswordLine className="text-xl" /></label>
-                        <input type="password" placeholder='Password' name="password" className='input-glass' onChange={handleChange} />
+                        <input
+                            placeholder='Password'
+                            name="password"
+                            className='input-glass'
+                            type={showPas ? "text" : "password"}
+                            onChange={handleChange}
+                        />                        <label className="text-slate-400 shrink-0" onClick={() => setShowPas(current => !current)}>
+                            {showPas ?
+                                (<RiEyeLine />)
+                                : (<RiEyeOffLine />)
+                            }
+                        </label>
                     </div>
                     <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
                         {loading ? "Creating account..." : "Sign up"}

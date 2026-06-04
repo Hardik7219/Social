@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'
 import { getChats, sendChat } from '../../services/chat.service';
 import { IoArrowBack } from 'react-icons/io5';
@@ -14,15 +14,23 @@ function ChatSection() {
     const [name, setName] = useState()
     const { user } = useAuth();
     const [avatar, setAvatar] = useState()
+    const bottomRef = useRef();
     useEffect(() => {
         const fetchChats = async () => {
             const res = await getChats(id)
             setData(res.msgs)
             setName(res.user.username)
             setAvatar(res.user.avatar)
+            console.log(res);
+
         }
         fetchChats();
     }, [])
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({
+            behavior: "smooth"
+        });
+    }, [data]);
     useEffect(() => {
 
         if (user?._id) {
@@ -38,29 +46,23 @@ function ChatSection() {
     }, [user]);
     useEffect(() => {
 
-        socket.on(
-            "receive_message",
-            (newMessage) => {
+        const handleMessage = (newMessage) => {
+            setData((prev) => [...prev, newMessage]);
+        };
 
-                setData((prev) => [
-                    ...prev,
-                    newMessage
-                ]);
-            }
-        );
+        socket.on("receive_message", handleMessage);
 
         return () => {
-
-            socket.off("receive_message");
+            socket.off("receive_message", handleMessage);
         };
 
     }, []);
     const sendMsg = async (e) => {
 
         e.preventDefault();
-
-        const res =
-            await sendChat(id, msg);
+        if (!msg.trim()) return;
+        const res = await sendChat(id, msg);
+        setMsg("");
 
         socket.emit(
             "send_message",
@@ -69,13 +71,21 @@ function ChatSection() {
                 ...res
             }
         );
-        setMsg("");
         setData((prev) => [
             ...prev,
             res
         ]);
 
-        
+
+    };
+    const fullDateTime = (date) => {
+        return new Date(date).toLocaleString([], {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
     };
     return (
         <>
@@ -117,7 +127,16 @@ function ChatSection() {
                                         : "chat-bubble-received"
                                 }
                             >
-                                <p>{e.message}</p>
+                                <div className='flex justify-between'>
+                                    <p>{e.message}</p>
+                                    <div className="flex flex-col">
+                                        
+
+                                        <p className="text-[10px] opacity-40">
+                                            {fullDateTime(e.createdAt)}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     )}
@@ -131,9 +150,9 @@ function ChatSection() {
                                 className='input-glass flex-1 px-4 py-2.5'
                                 type="text"
                                 placeholder='Type a message...'
+                                value={msg}
                             />
                             <button
-                                onClick={sendMsg}
                                 className='btn-primary shrink-0 px-5 py-2.5 text-sm rounded-xl'
                             >
                                 Send
@@ -141,6 +160,7 @@ function ChatSection() {
                         </div>
                     </form>
                 </div>
+                <div ref={bottomRef}></div>
             </div>
         </>
     )

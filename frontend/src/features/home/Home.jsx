@@ -9,11 +9,28 @@ import Chat from "../chats/Chat";
 import Discover from "../discover/Discover";
 import FollowerPost from "../followersPosts/FollowerPost";
 import Search from "../search/Search";
-
+import { useEffect } from "react";
+import socket from "../../socket/socket";
 function Home() {
 
     const [page, setPage] = useState("posts");
+    const [notificationCount, setNotificationCount] = useState(0);
+    useEffect(() => {
 
+        socket.on(
+            "receive_notification",
+            () => {
+
+                setNotificationCount((prev) => prev + 1);
+
+            }
+        );
+
+        return () => {
+            socket.off("receive_notification");
+        };
+
+    }, []);
     return (
 
         <div className="min-h-screen text-white flex justify-center">
@@ -22,12 +39,20 @@ function Home() {
 
                 {/* LEFT SIDEBAR */}
                 <aside className="hidden md:flex w-20 lg:w-64 border-r border-white/6 fixed left-0 top-0 h-screen glass-panel-strong z-40 flex-col">
-                    <Navbar setPage={setPage} page={page} />
+                    <Navbar
+                        setPage={setPage}
+                        page={page}
+                        notificationCount={notificationCount}
+                    />
                 </aside>
 
                 {/* MOBILE BOTTOM NAV */}
                 <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel-strong border-t border-white/6 px-2 py-2 safe-area-pb">
-                    <Navbar setPage={setPage} page={page} />
+                    <Navbar
+                        setPage={setPage}
+                        page={page}
+                        notificationCount={notificationCount}
+                    />
                 </nav>
 
                 {/* MAIN FEED */}
@@ -35,18 +60,20 @@ function Home() {
                     {page === "posts" && <Posts />}
 
                     {page === "notifiation" && (
-                        <Notifications />
+                        <Notifications
+                            setNotificationCount={setNotificationCount}
+                        />
                     )}
 
                     {page === "chat" && <Chat />}
                     <div className="lg:hidden">
-                        {page =="discover" && <Discover></Discover>}
+                        {page == "discover" && <Discover></Discover>}
                     </div>
                     {page === "post" && (
                         <FollowerPost />
                     )}
                     {page === "search" && (
-                        <Search/>
+                        <Search />
                     )}
                 </main>
                 <aside className="hidden lg:flex w-72 border-l border-white/6 fixed right-0 top-0 h-screen glass-panel-strong z-40 flex-col p-5 overflow-y-auto">

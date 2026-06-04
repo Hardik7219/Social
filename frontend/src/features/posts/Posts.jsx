@@ -14,7 +14,7 @@ function Posts() {
   const [showCode, setShowCode] = useState(false);
   const [code, setCode] = useState("");
   const { user } = useAuth();
-
+  const [posting, setPosting] = useState(false)
   const {
     data: posts,
     isLoading,
@@ -30,6 +30,7 @@ function Posts() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPosting(true)
     const formData = new FormData();
     formData.append('title', title);
     if (!code) formData.append('img', img);
@@ -39,6 +40,7 @@ function Posts() {
     setImg(null);
     setCode("");
     setShowCode(false);
+    setPosting(false)
   };
 
   const handleImgChange = (e) => {
@@ -87,7 +89,7 @@ function Posts() {
           </div>
 
           {showCode && (
-            <div className="code-snippet !mx-0 w-full animate-fade-in">
+            <div className="code-snippet mx-0! w-full animate-fade-in">
               <div className="code-snippet-header">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="flex gap-1.5 shrink-0" aria-hidden>
@@ -117,7 +119,7 @@ function Posts() {
                 spellCheck={false}
                 autoFocus
               />
-              <p className="text-xs text-slate-500 px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.02]">
+              <p className="text-xs text-slate-500 px-4 py-2.5 border-t border-white/6 bg-white/2">
                 Tip: start with{" "}
                 <span className="font-mono text-cyan-400/80">```javascript</span>{" "}
                 for syntax highlighting on the feed
@@ -126,9 +128,23 @@ function Posts() {
           )}
 
           {img && (
-            <p className="text-xs text-cyan-400/90 font-medium truncate">
-              Image selected: {img.name}
-            </p>
+            <div className="mx-5 mb-4 rounded-xl overflow-hidden border border-white/6 bg-black/40">
+              <div className=" mx-0! w-full animate-fade-in">
+                <button
+                  type="button"
+                  onClick={() => setImg(null)}
+                  className="btn-ghost py-1.5 px-2.5 text-xs shrink-0 flex justify-self-end m-2"
+                  aria-label="Remove code"
+                >
+                  <IoClose className="text-base" />
+                </button>
+              </div>
+              <img
+                src={URL.createObjectURL(img)}
+                className='w-full max-h-96 object-contain'
+                alt=''
+              />
+            </div>
           )}
 
           <div className='flex items-center justify-between gap-4 pt-1'>
@@ -164,7 +180,7 @@ function Posts() {
               className='btn-primary px-6'
               disabled={!title.trim() && !code.trim() && !img}
             >
-              Publish
+              {posting ? ("Publishing...") : ("Publish")}
             </button>
           </div>
         </form>

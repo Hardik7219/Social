@@ -2,19 +2,41 @@ import Notification from "../models/notification.model.js";
 
 export const getNotifications = async (req, res) => {
 	try {
+
 		const userId = req.user._id;
 
-		const notifications = await Notification.find({ to: userId }).populate({
+		const notifications = await Notification.find({
+			to: userId
+		}).populate({
 			path: "from",
 			select: "username",
 		});
 
-		await Notification.updateMany({ to: userId }, { read: true });
+		const unreadCount = await Notification.countDocuments({
+			to: userId,
+			read: false
+		});
 
-		res.status(200).json(notifications);
+		await Notification.updateMany(
+			{ to: userId },
+			{ read: true }
+		);
+
+		res.status(200).json({
+			notifications,
+			unreadCount
+		});
+
 	} catch (error) {
-		console.log("Error in getNotifications function", error.message);
-		res.status(500).json({ error: "Internal Server Error" });
+
+		console.log(
+			"Error in getNotifications function",
+			error.message
+		);
+
+		res.status(500).json({
+			error: "Internal Server Error"
+		});
 	}
 };
 

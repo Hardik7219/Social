@@ -1,6 +1,6 @@
 
 import { MdOutlineMail } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
@@ -9,7 +9,7 @@ function Login() {
     const navigate = useNavigate();
 
     const { login } = useAuth();
-
+    const [showPas, setShowPas] = useState(false)
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -73,12 +73,18 @@ function Login() {
                     <div className='auth-input-group'>
                         <label className="text-slate-400 shrink-0"><RiLockPasswordLine className="text-xl" /></label>
                         <input
-                            type="password"
                             placeholder='Password'
                             name="password"
                             className='input-glass'
+                            type={showPas ? "text":"password"}
                             onChange={handleChange}
                         />
+                        <label className="text-slate-400 shrink-0" onClick={()=>setShowPas(current=>!current)}>
+                            {showPas ? 
+                            (<RiEyeLine />)
+                            :(<RiEyeOffLine />)
+                            }
+                        </label>
                     </div>
                     <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
                         {loading ? "Logging in..." : "Sign in"}

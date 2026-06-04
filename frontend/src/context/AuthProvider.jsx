@@ -14,12 +14,10 @@ const AuthProvider = ({ children }) => {
         const checkAuth = async () => {
 
             try {
-
                 const response = await API.get("/auth/my");
-
                 setUser(response.data.user);
             } catch (error) {
-                console.log(error);
+                console.log("hello",error);
                 localStorage.removeItem("user");
                 setUser(null);
             } finally {

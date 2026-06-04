@@ -8,10 +8,14 @@ export const signup = async (req, res) => {
         if (!username || !name || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
-        const user = await userModel.findOne({ email });
-        if (user) return res.json({ status: 400, message: "user is already exist" });
-        if (password.length < 6) return res.json({ message: 'password should atleast be 6 character long' })
 
+        const user = await userModel.findOne({ email });
+        if (user) return res.status(400).json({ message: "email already used" });
+        const isUserName = await userModel.findOne({ username })
+        if (isUserName) return res.status(400).json({ message: "username already used" });
+        if (password.length < 6) return res.status(400).json({ message: 'password should atleast be 6 character long' })
+        const isEmailValid = /^[^\s@]+@(gmail|yahoo|outlook)\.com$/.test(email);
+        if (!isEmailValid) return res.status(400).json({ message: 'Invalid Email' })
         const bash = await bcrypt.genSalt(10)
         const hashPass = await bcrypt.hash(password, bash);
         const createUser = await userModel.create({
@@ -49,7 +53,7 @@ export const login = async (req, res) => {
                 username: user.username,
                 name: user.name,
                 email: user.email,
-                avatar:user.avatar
+                avatar: user.avatar
             }
         });
 
@@ -72,10 +76,10 @@ export const getData = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         res.clearCookie("jwt", {
-   httpOnly: true,
-   secure: true,
-   sameSite: "strict"
-});
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.log("Error in logout controller", error.message);

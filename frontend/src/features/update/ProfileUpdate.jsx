@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoArrowBack, IoPerson } from "react-icons/io5";
 import { BsPersonVideo } from "react-icons/bs";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine } from "react-icons/ri";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineDescription } from "react-icons/md";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ function ProfileUpdate() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPas, setShowPas] = useState(false)
 
   useEffect(() => {
     if (authLoading) return;
@@ -154,7 +155,7 @@ function ProfileUpdate() {
               onChange={handleAvatarChange}
             />
           </div>
-            <p className="text-sm text-slate-500 mt-2 truncate">{formData.email}</p>
+          <p className="text-sm text-slate-500 mt-2 truncate">{formData.email}</p>
           <div className="auth-input-group">
             <label className="text-slate-400 shrink-0">
               <BsPersonVideo className="text-xl" />
@@ -232,7 +233,7 @@ function ProfileUpdate() {
                 <RiLockPasswordLine className="text-xl" />
               </label>
               <input
-                type="password"
+                type={showPas ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 className="input-glass"
@@ -242,6 +243,12 @@ function ProfileUpdate() {
                 }}
                 autoFocus
               />
+              <label className="text-slate-400 shrink-0" onClick={() => setShowPas(current => !current)}>
+                {showPas ?
+                  (<RiEyeLine />)
+                  : (<RiEyeOffLine />)
+                }
+              </label>
             </div>
 
             <div className="flex gap-3">

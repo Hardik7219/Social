@@ -4,17 +4,26 @@ import { useState } from 'react'
 import { IoNotificationsOutline } from 'react-icons/io5';
 import Notification from '../../components/ui/Notification';
 
-function Notifications() {
+function Notifications({ setNotificationCount }) {
   const [data, setData] = useState();
   useEffect(() => {
+
     const fetchNotifications = async () => {
+
       const res = await getNotifications();
-      setData(res)
-    }
+
+      setData(res.notifications);
+
+      setNotificationCount(0);
+    };
+
     fetchNotifications();
-  }, [])
-  const deleteNo = async ()=>{
+
+  }, []);
+  const deleteNo = async () => {
     await deleteNotifications();
+    setData([]);
+    setNotificationCount(0);
   }
   return (
     <div className="animate-fade-in">
@@ -29,20 +38,20 @@ function Notifications() {
       </div>
 
       <div className="flex flex-col gap-3 stagger-children">
-      {data && (
-        data.map((e) => (
-          <div key={e._id}>
-            <Notification type={e.type} id={e._id} from={e.from.username}></Notification>
-          </div>
-        ))
-      )}
+        {data && (
+          data.map((e) => (
+            <div key={e._id}>
+              <Notification type={e.type} id={e._id} from={e.from.username}></Notification>
+            </div>
+          ))
+        )}
 
-      {data && data.length === 0 && (
-        <div className="glass-panel rounded-2xl p-12 text-center">
-          <IoNotificationsOutline className="text-4xl text-slate-600 mx-auto mb-3" />
-          <p className="text-slate-500 text-sm">No notifications yet</p>
-        </div>
-      )}
+        {data && data.length === 0 && (
+          <div className="glass-panel rounded-2xl p-12 text-center">
+            <IoNotificationsOutline className="text-4xl text-slate-600 mx-auto mb-3" />
+            <p className="text-slate-500 text-sm">No notifications yet</p>
+          </div>
+        )}
       </div>
     </div>
   )
