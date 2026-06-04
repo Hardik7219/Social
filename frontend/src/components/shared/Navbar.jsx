@@ -59,24 +59,7 @@ function Navbar({ setPage, page, notificationCount, msgCount }) {
           <li onClick={() => setPage("notifiation")} className={`${navClass("notifiation")} relative`}>
             <IoIosNotificationsOutline className="text-xl md:text-lg shrink-0" />
             {notificationCount > 0 && (
-              <span
-                className="
-      absolute
-      top-1
-      right-1
-      bg-red-500
-      text-white
-      text-[10px]
-      min-w-4.5
-      h-4.5
-      rounded-full
-      flex
-      items-center
-      justify-center
-      px-1
-      font-semibold
-    "
-              >
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] min-w-4.5 h-4.5 rounded-full flex items-center justify-center px-1 font-semibold">
                 {notificationCount > 99 ? "99+" : notificationCount}
               </span>
             )}

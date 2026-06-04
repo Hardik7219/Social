@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import Navbar from "../../components/shared/Navbar";
 
@@ -12,14 +12,31 @@ import Search from "../search/Search";
 import { useEffect } from "react";
 import socket from "../../socket/socket";
 import { getUnreadNotificationCount } from "../../services/notification.servive";
+import useAuth from "../../hooks/useAuth";
 function Home() {
 
     const [page, setPage] = useState("posts");
     const [notificationCount, setNotificationCount] = useState(0);
     const [msgCount, setMsgCount] = useState(0);
+    const { user } = useAuth();
+    const pageRef = useRef("posts");
+    const handleSetPage = (newPage) => {
+        pageRef.current = newPage;
+        if (newPage === "chat") {
+            setMsgCount(0);
+        }
+        setPage(newPage);
+    };
+    useEffect(() => {
+        if (user?._id) {
+            socket.emit("add_user", user._id);
+        }
+    }, [user]);
     useEffect(() => {
         socket.on("connect", () => {
-            console.log("Socket connected:", socket.id);
+            if (user?._id) {
+                socket.emit("add_user", user._id);
+            }
         });
 
         const fetchUnreadCount = async () => {
@@ -37,7 +54,9 @@ function Home() {
             setNotificationCount((prev) => prev + 1);
         });
         socket.on("receive_message_notification", () => {
-            setMsgCount((prev) => prev + 1);
+            if (pageRef.current !== "chat") {
+                setMsgCount((prev) => prev + 1);
+            }
         });
         return () => {
             socket.off("receive_notification");
@@ -45,12 +64,7 @@ function Home() {
             socket.off("connect");
         };
     }, []);
-    const handleSetPage = (newPage) => {
-        if (newPage === "chat") {
-            setMsgCount(0);
-        }
-        setPage(newPage);
-    };
+
     return (
 
         <div className="min-h-screen text-white flex justify-center">
@@ -63,7 +77,7 @@ function Home() {
                         setPage={handleSetPage}
                         page={page}
                         notificationCount={notificationCount}
-                        msgCount={msgCount} 
+                        msgCount={msgCount}
                     />
                 </aside>
 
