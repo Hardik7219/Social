@@ -19,9 +19,7 @@ export const addComment = async (postId,comment)=>{
 }
 
 export const likePost = async (postId)=>{
-        
     await API.post(`post/like/${postId}`)
-    
 }
 
 export const deletePost = async (postId)=>{
@@ -38,4 +36,7 @@ export const FollowersPost = async ()=>{
     const res = await API.get("/post/getfollowerpost")
     return res.data.posts
     
+}
+export const deleteComment = async (commentId,postId)=>{    
+    await API.post(`/post/${postId}/deletecomment/${commentId}`)
 }

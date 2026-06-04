@@ -380,7 +380,7 @@ function Post({ post }) {
                         <div className="space-y-3">
                             {post.comments && (
                                 post.comments.map((e) => (
-                                    <Comment key={e._id ?? e.userComment?._id} id={e.userComment._id} avatar={e.userComment.avatar} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
+                                    <Comment key={e._id ?? e.userComment?._id} commentId={e._id} postId={post._id} id={e.userComment._id} avatar={e.userComment.avatar} username={e.userComment.username} name={e.userComment.name} comment={e.text}></Comment>
                                 ))
                             )}
                         </div>

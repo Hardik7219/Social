@@ -21,7 +21,6 @@ function ChatSection() {
             setData(res.msgs)
             setName(res.user.username)
             setAvatar(res.user.avatar)
-            console.log(res);
 
         }
         fetchChats();

@@ -37,7 +37,7 @@ export const createPost = async (req, res) => {
             const newPost = await Post.create({
                 userId: req.user._id,
                 title: title,
-                code:code,
+                code: code,
                 type: "code"
             })
         }
@@ -114,7 +114,38 @@ export const commentPost = async (req, res) => {
         return res.json({ status: 500, message: 'internal server error' })
     }
 }
+export const deleteComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;        
+        const post = await Post.findByIdAndUpdate(
+            postId,
+            {
+                $pull: {
+                    comments: {
+                        _id: commentId
+                    }
+                }
+            },
+            { new: true }
+        );
 
+        if (!post) {
+
+            return res.status(404).json({
+                error: "Post not found"
+            });
+
+        }
+
+        res.status(200).json({
+            message: "Comment deleted successfully",
+            post
+        });
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500, message: 'internal server error' })
+    }
+}
 export const allPosts = async (req, res) => {
     try {
         const posts = await Post.find().sort({ createdAt: -1 }).populate({
