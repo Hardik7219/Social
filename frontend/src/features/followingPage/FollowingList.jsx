@@ -25,7 +25,7 @@ function FollowingList() {
                         >
                             <IoArrowBack className="text-xl" />
                         </Link>
-                        <p className="section-subtitle mb-1">followers</p>
+                        <p className="section-subtitle mb-1">Followings</p>
                     </div>
 
                     <div className="flex flex-col gap-3 stagger-children">
