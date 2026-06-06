@@ -166,15 +166,29 @@ export const getChats = async (req, res) => {
 }
 
 export const deleteChatMsg = async (req, res) => {
+
     try {
         const { msgId } = req.params;
-        
-        const msg = await Msg.findByIdAndDelete(msgId)
+        const msg = await Msg.findById(msgId);
         if (!msg) {
             return res.status(404).json({
                 error: "Msg not found"
             });
         }
+        if (msg.senderId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                error: "Unauthorized"
+            });
+        }
+        const msgTime = new Date(msg.createdAt).getTime();
+        const currentTime = Date.now();
+        const fifteenMinutes = 15 * 60 * 1000;
+        if (currentTime - msgTime > fifteenMinutes) {
+            return res.status(403).json({
+                error: "Delete time expired"
+            });
+        }
+        await msg.deleteOne();
         res.status(200).json({
             message: "Message deleted successfully",
             msg
@@ -186,4 +200,4 @@ export const deleteChatMsg = async (req, res) => {
             message: "internal server error"
         });
     }
-}
+};
