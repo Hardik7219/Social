@@ -150,7 +150,7 @@ export const getChats = async (req, res) => {
         }).sort({
             createdAt: 1
         })
-        const user = await User.findById(id).select("username name _id avatar")        
+        const user = await User.findById(id).select("username name _id avatar")
         return res.status(200).json({
             msgs,
             user
@@ -158,11 +158,31 @@ export const getChats = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-
         return res.status(500).json({
-
             success: false,
+            message: "internal server error"
+        });
+    }
+}
 
+export const deleteChatMsg = async (req, res) => {
+    try {
+        const { msgId } = req.params;
+        
+        const msg = await Msg.findByIdAndDelete(msgId)
+        if (!msg) {
+            return res.status(404).json({
+                error: "Msg not found"
+            });
+        }
+        res.status(200).json({
+            message: "Message deleted successfully",
+            msg
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
             message: "internal server error"
         });
     }

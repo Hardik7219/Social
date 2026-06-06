@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'
-import { getChats, sendChat } from '../../services/chat.service';
+import { deleteChatMsg, getChats, sendChat } from '../../services/chat.service';
 import { IoArrowBack, IoSend } from 'react-icons/io5';
 
 import { useEffect } from "react";
 import socket
     from "../../socket/socket";
 import useAuth from '../../hooks/useAuth';
+import { HiOutlineTrash } from 'react-icons/hi';
 function ChatSection() {
     const { id } = useParams();
     const [data, setData] = useState([]);
@@ -14,6 +15,8 @@ function ChatSection() {
     const [name, setName] = useState()
     const { user } = useAuth();
     const [avatar, setAvatar] = useState()
+    const [deleteSure, setDeleteSure] = useState(false)
+    const [dltId,setDltId] = useState(null)
     const bottomRef = useRef();
     useEffect(() => {
         const fetchChats = async () => {
@@ -86,6 +89,17 @@ function ChatSection() {
             minute: "2-digit"
         });
     };
+    const [deleting, setDeleting] = useState(false)
+    const handleDelete = async () => {
+        try {
+            setDeleting(true)
+            await deleteChatMsg(dltId)
+            setDeleting(false)
+            setDeleteSure(false)
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <>
             <div className="min-h-screen flex flex-col max-w-2xl mx-auto bg-transparent">
@@ -116,22 +130,20 @@ function ChatSection() {
                 <div className='flex-1 overflow-y-auto px-4 py-6 space-y-3 min-h-[calc(100vh-140px)]'>
                     {data && (
                         data.map((e) => (
-                            <div
-                                key={e._id}
-                                className={
-                                    e.senderId === user._id
-
-                                        ? "chat-bubble-sent"
-
-                                        : "chat-bubble-received"
-                                }
-                            >
+                            <div key={e._id} className={e.senderId === user._id ? "chat-bubble-sent" : "chat-bubble-received"}>
                                 <div className='flex justify-between'>
                                     <p>{e.message}</p>
-                                    <div className="flex flex-col">
+                                    <div className="flex gap-2">
                                         <p className="text-[10px] opacity-40">
                                             {fullDateTime(e.createdAt)}
                                         </p>
+                                        {e.senderId === user._id && (
+                                            <div onClick={() => {
+                                                setDeleteSure(true);
+                                                setDltId(e._id)
+                                            }}><HiOutlineTrash className="" /></div>
+                                        )
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -158,6 +170,20 @@ function ChatSection() {
                     </form>
                 </div>
                 <div ref={bottomRef}></div>
+                {deleteSure && (
+                    <div className='w-full h-screen absolute z-50 flex justify-center items-center lg:justify-start backdrop-blur-md'>
+                        <div className=" flex flex-col sm:flex-row  mb-0 items-center justify-center gap-2 p-6 rounded-2xl bg-slate-950/90 backdrop-blur-md">
+                            <p className="text-slate-300 text-sm font-medium">Delete this message?</p>
+                            <div className="flex gap-3">
+                                <button onClick={() =>{
+                                    setDeleteSure(false)
+                                    setDltId(null)
+                                }} className="btn-ghost">Cancel</button>
+                                <button className="btn-danger" onClick={handleDelete}>{deleting ? ("Deleting..") : ("Delete")}</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     )
