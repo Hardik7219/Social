@@ -106,6 +106,9 @@ function ChatSection() {
         try {
             setDeleting(true)
             await deleteChatMsg(dltId)
+            setData((prev) =>
+                prev.filter((msg) => msg._id !== dltId)
+            );
             setDeleting(false)
             setDeleteSure(false)
         } catch (error) {
