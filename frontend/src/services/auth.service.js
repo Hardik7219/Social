@@ -7,7 +7,7 @@ export const loginUser = async (data) => {
         data
     );
     
-    return response.data;
+    return response;
 };
 
 

@@ -18,26 +18,22 @@ function Login() {
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
-
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     };
     const handleSubmit = async (e) => {
-
         e.preventDefault();
         setError("");
         setLoading(true);
-
         try {
-
             const data = await loginUser(formData);
-
-            login(data.user);
-
-            navigate("/");
-
+            login(data.data.user);            
+            if (data.status == 200) {
+                navigate("/");
+            }
+            if (data.data.message) setError(data.message)
         } catch (error) {
             const message = error.response?.data?.message || "Login failed. Please try again.";
             setError(message);
@@ -76,13 +72,13 @@ function Login() {
                             placeholder='Password'
                             name="password"
                             className='input-glass'
-                            type={showPas ? "text":"password"}
+                            type={showPas ? "text" : "password"}
                             onChange={handleChange}
                         />
-                        <label className="text-slate-400 shrink-0" onClick={()=>setShowPas(current=>!current)}>
-                            {showPas ? 
-                            (<RiEyeLine />)
-                            :(<RiEyeOffLine />)
+                        <label className="text-slate-400 shrink-0" onClick={() => setShowPas(current => !current)}>
+                            {showPas ?
+                                (<RiEyeLine />)
+                                : (<RiEyeOffLine />)
                             }
                         </label>
                     </div>

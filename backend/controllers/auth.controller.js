@@ -37,9 +37,8 @@ export const login = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
         }
-
         const user = await userModel.findOne({ email });
-        if (!user) return res.json({ status: 401, message: 'user not found' })
+        if (!user) return res.json({ status: 401, message: 'Invalid email or password' })
         const isMatch = await bcrypt.compare(password, user?.password || "")
         if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
 
