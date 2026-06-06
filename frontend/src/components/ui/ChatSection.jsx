@@ -16,7 +16,9 @@ function ChatSection() {
     const { user } = useAuth();
     const [avatar, setAvatar] = useState()
     const [deleteSure, setDeleteSure] = useState(false)
-    const [dltId,setDltId] = useState(null)
+    const [dltId, setDltId] = useState(null)
+    const [deleting, setDeleting] = useState(false)
+
     const bottomRef = useRef();
     useEffect(() => {
         const fetchChats = async () => {
@@ -89,7 +91,17 @@ function ChatSection() {
             minute: "2-digit"
         });
     };
-    const [deleting, setDeleting] = useState(false)
+    const canDeleteMessage = (createdAt) => {
+
+        const messageTime = new Date(createdAt).getTime();
+
+        const currentTime = Date.now();
+
+        const fifteenMinutes = 15 * 60 * 1000;
+
+        return currentTime - messageTime <= fifteenMinutes;
+
+    };
     const handleDelete = async () => {
         try {
             setDeleting(true)
@@ -137,12 +149,13 @@ function ChatSection() {
                                         <p className="text-[10px] opacity-40">
                                             {fullDateTime(e.createdAt)}
                                         </p>
-                                        {e.senderId === user._id && (
-                                            <div onClick={() => {
-                                                setDeleteSure(true);
-                                                setDltId(e._id)
-                                            }}><HiOutlineTrash className="" /></div>
-                                        )
+                                        {e.senderId === user._id &&
+                                            canDeleteMessage(e.createdAt) && (
+                                                <div onClick={() => {
+                                                    setDeleteSure(true);
+                                                    setDltId(e._id)
+                                                }}><HiOutlineTrash className="" /></div>
+                                            )
                                         }
                                     </div>
                                 </div>
@@ -175,7 +188,7 @@ function ChatSection() {
                         <div className=" flex flex-col sm:flex-row  mb-0 items-center justify-center gap-2 p-6 rounded-2xl bg-slate-950/90 backdrop-blur-md">
                             <p className="text-slate-300 text-sm font-medium">Delete this message?</p>
                             <div className="flex gap-3">
-                                <button onClick={() =>{
+                                <button onClick={() => {
                                     setDeleteSure(false)
                                     setDltId(null)
                                 }} className="btn-ghost">Cancel</button>
