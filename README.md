@@ -44,7 +44,7 @@ A full-stack social media app. Share posts, snippets of code, follow other users
 
 ---
 ### Screenshot
----<img width="1920" height="1080" alt="Screenshot_20260130_200236" src="[https://github.com/user-attachments/assets/76685e81-c7e8-46fa-a0a7-0d345025fde5](https://github.com/user-attachments/assets/be537cbf-5c1d-48da-951e-9ce6ce3091b4)" />
+---<img width="1920" height="1080" alt="Screenshot_20260130_200236" src="[https://github.com/user-attachments/assets/be537cbf-5c1d-48da-951e-9ce6ce3091b4]" />
 
 
 
