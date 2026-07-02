@@ -1,6 +1,6 @@
 # Social — Hx1c33
 - **https://hx1c33.onrender.com/**
-A full-stack social media app. Share posts, snippets of code, follow other users, and chat in real time.
+- A full-stack social media app. Share posts, snippets of code, follow other users, and chat in real time.
 
 ---
 
