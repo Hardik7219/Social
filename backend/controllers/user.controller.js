@@ -84,7 +84,9 @@ export const updateProfile = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
+      if(bio.length>=20){
+          return res.status(404).json({message:"can not be this large"});
+      }
         if (!currentPassword) {
             return res.status(400).json({ message: "Password is required" });
         }
