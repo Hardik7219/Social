@@ -1,5 +1,6 @@
 import { AiOutlineHeart } from 'react-icons/ai'
 import { IoPersonAddOutline } from 'react-icons/io5'
+import { Link } from 'react-router-dom'
 
 function Notification({type,id,from}) {
   return (
@@ -23,9 +24,13 @@ function Notification({type,id,from}) {
                   )}
                   {type=="follow" &&(
                     <p className="text-slate-200 text-sm leading-relaxed">
-                      <span className="font-semibold text-white">{from}</span>
+                      <span className="font-semibold text-white">
+                        <Link
+                            to={`/profile/${id}`}
+                            className="font-semibold text-white hover:text-cyan-300 transition-colors truncate block"
+                        >{from}</Link></span>
                       {' '}started following you
-                    </p>
+                    </p>  
                   )}
                   </div>
                 </div>

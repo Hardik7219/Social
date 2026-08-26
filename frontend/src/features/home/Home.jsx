@@ -1,11 +1,8 @@
 import { useRef, useState } from "react";
-
 import Navbar from "../../components/shared/Navbar";
-
 import Posts from "../posts/Posts";
 import Notifications from "../notifications/Notifications";
 import Chat from "../chats/Chat";
-
 import Discover from "../discover/Discover";
 import FollowerPost from "../followersPosts/FollowerPost";
 import Search from "../search/Search";
@@ -13,12 +10,13 @@ import { useEffect } from "react";
 import socket from "../../socket/socket";
 import { getUnreadNotificationCount } from "../../services/notification.servive";
 import useAuth from "../../hooks/useAuth";
-function Home() {
+import AppLoader from "../../components/ui/AppLoader";
 
+function Home() {
     const [page, setPage] = useState("posts");
     const [notificationCount, setNotificationCount] = useState(0);
     const [msgCount, setMsgCount] = useState(0);
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const pageRef = useRef("posts");
     const handleSetPage = (newPage) => {
         pageRef.current = newPage;
@@ -64,11 +62,13 @@ function Home() {
             socket.off("connect");
         };
     }, []);
-
+    if (loading) {
+        <AppLoader></AppLoader>
+    }
     return (
 
         <div className="min-h-screen text-white flex justify-center">
-
+            
             <div className="w-full max-w-7xl flex relative">
 
                 {/* LEFT SIDEBAR */}

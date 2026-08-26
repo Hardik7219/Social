@@ -8,10 +8,8 @@ export const getProfile = async (req, res) => {
         const { id } = req.params;
 
         const user = await User.findById(id).select("-password")
-        if (!user) return res.json({ status: 401, message: 'user not found' })
-
+        if (!user) return res.json({ status: 401, message: 'user not found' })    
         res.json(user)
-
     } catch (error) {
         console.log(error)
         req.json({ status: 500, message: "internal server error" })
@@ -79,14 +77,14 @@ export const suggestedFollower = async (req, res) => {
 }
 export const updateProfile = async (req, res) => {
     try {
-        const { username, name, bio, currentPassword } = req.body;
-        const user = await User.findById(req.user._id);
+        const { username, name, bio, currentPassword ,isPrivate } = req.body;
+        const user = await User.findById(req.user._id);        
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-      if(bio.length>=20){
-          return res.status(404).json({message:"can not be this large"});
-      }
+        if(bio.length>=20){
+            return res.status(404).json({message:"maximum 20 letters"});
+        }
         if (!currentPassword) {
             return res.status(400).json({ message: "Password is required" });
         }
@@ -107,7 +105,7 @@ export const updateProfile = async (req, res) => {
         if (username) updates.username = username.trim();
         if (name !== undefined) updates.name = name.trim();
         if (bio !== undefined) updates.bio = bio.trim();
-
+        if(isPrivate) updates.isPrivate=isPrivate;
         if (req.file) {
             if (user.avatarPublicId) {
                 await cloudinary.uploader.destroy(user.avatarPublicId);

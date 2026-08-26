@@ -8,7 +8,6 @@ export const getSuggestedUsers = async () => {
 
 export const getUser = async (id) => {
     const res = await API.get(`/user/profile/${id}`)
-
     return res.data;
 
 

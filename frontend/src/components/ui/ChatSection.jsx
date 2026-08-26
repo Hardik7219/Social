@@ -138,7 +138,7 @@ function ChatSection() {
                         {name && (
                             <p className="font-semibold text-white truncate">{name}</p>
                         )}
-                        <p className="text-xs text-emerald-400/80">Active now</p>
+                        <p className="text-xs text-emerald-400/80"></p>
                     </div>
                 </header>
 

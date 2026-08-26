@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoArrowBack, IoPerson } from "react-icons/io5";
 import { BsPersonVideo } from "react-icons/bs";
-import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine, RiLock2Line } from "react-icons/ri";
 import { FaRegImage } from "react-icons/fa6";
 import { MdOutlineDescription } from "react-icons/md";
 import { useQueryClient } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ function ProfileUpdate() {
     username: "",
     name: "",
     bio: "",
+    isPrivate: false,
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
@@ -41,6 +42,7 @@ function ProfileUpdate() {
       username: user.username || "",
       name: user.name || "",
       bio: user.bio || "",
+      isPrivate: user.isPrivate || false
     });
     if (user.avatar) {
       setAvatarPreview(user.avatar);
@@ -79,6 +81,7 @@ function ProfileUpdate() {
       payload.append("username", formData.username);
       payload.append("name", formData.name);
       payload.append("bio", formData.bio);
+      payload.append("isPrivate", formData.isPrivate);
       payload.append("currentPassword", password);
       if (avatarFile) {
         payload.append("avatar", avatarFile);
@@ -199,7 +202,21 @@ function ProfileUpdate() {
               onChange={handleChange}
             />
           </div>
-
+          <div className="auth-input-group items-start py-3">
+            <label className="text-slate-400 shrink-0 mt-0.5">
+              <RiLock2Line className="text-xl" />
+            </label>
+            <label>Private</label>
+            <label class="switch">
+              <input type="checkbox" name="isPrivate" checked={formData.isPrivate} onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  isPrivate: e.target.checked
+                })
+              }}></input>
+              <span class="slider"></span>
+            </label>
+          </div>
           <button type="submit" className="btn-primary w-full mt-2">
             Update profile
           </button>

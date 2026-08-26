@@ -116,7 +116,7 @@ export const commentPost = async (req, res) => {
 }
 export const deleteComment = async (req, res) => {
     try {
-        const { postId, commentId } = req.params;        
+        const { postId, commentId } = req.params;
         const post = await Post.findByIdAndUpdate(
             postId,
             {
@@ -148,14 +148,25 @@ export const deleteComment = async (req, res) => {
 }
 export const allPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).populate({
+        const userId = req.user?._id;
+
+        const follwers = req.user?.followers || [];
+        
+        const post = await Post.find().sort({ createdAt: -1 }).populate({
             path: 'userId',
             select: "-password"
         }).populate({
             path: 'comments.userComment',
             select: '-password'
         })
+        const posts = post.filter((p) => {
+            const postId = p.userId;
+            if (!postId.isPrivate) return true;
+            if (postId._id.toString() === userId.toString()) return true;
 
+            if (follwers.some(id => id.toString() === postId._id.toString())) return true;
+            return false;
+        })
         if (!posts)
             return res.json({ message: 'there is no posts' })
 

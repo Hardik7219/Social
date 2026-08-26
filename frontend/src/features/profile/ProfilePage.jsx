@@ -8,12 +8,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SkeletonPost from '../../components/ui/skelotonLoaders/SkeletonPost'
 import SkeletonProfile from '../../components/ui/skelotonLoaders/SkeletonProfile'
 import { IoArrowBack } from 'react-icons/io5'
+import { HiLockClosed } from 'react-icons/hi'
 function ProfilePage() {
   const { user, logout, loading: authLoading } = useAuth()
   const { id } = useParams()
   const queryClient = useQueryClient();
-  const otherUser = id !== user?._id;
+  const otherUser =
+    id?.toString() !== user?._id?.toString();
   const navigate = useNavigate()
+
   const {
 
     data: profile,
@@ -142,87 +145,219 @@ function ProfilePage() {
   }
   const isFollowing =
     profile?.followers?.includes(user?._id);
+  const isFollowingMe = profile?.following?.some(
+    (id) => id.toString() === user?._id?.toString()
+  );
+  const canViewPosts =
+    !profile?.isPrivate || isFollowingMe;
   return (
-    <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
+    <>
+      {otherUser && (
 
-      {profile && (
-        <header className="glass-panel rounded-2xl p-6 sm:p-8 mb-8 neon-ring">
-          <Link
-            to="/"
-            className=" text-slate-400  hover:text-white hover:bg-white/6 transition-all duration-300"
-          >
-            <IoArrowBack className="text-xl" />
-          </Link>
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            {profile?.avatar ? (
-              <img
-                src={profile.avatar}
-                alt={profile.username}
-                className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
-              />
-            ) : (
-              <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
-            )}
-            <div className="flex-1 text-center sm:text-left min-w-0">
-              <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
-              <p className="text-slate-400 mt-1">{profile.name}</p>
-              {profile.bio && (
-                <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>
-              )}
-              {/* <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p> */}
-            </div>
-            <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
-              <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
-                {otherUser ? (
-                  <button
-                    disabled={followMutation.isPending}
-                    onClick={() => followMutation.mutate()}
-                    className={isFollowing ? "btn-ghost" : "btn-primary"}
-                  >
-                    {isFollowing ? "Following" : "Follow"}
-                  </button>
+        <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
+          {profile && (
+            <header className="glass-panel rounded-2xl p-6 sm:p-8 mb-8 neon-ring">
+              <Link
+                to="/"
+                className=" text-slate-400  hover:text-white hover:bg-white/6 transition-all duration-300"
+              >
+                <IoArrowBack className="text-xl" />
+              </Link>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                {profile?.avatar ? (
+                  <img
+                    src={profile.avatar}
+                    alt={profile.username}
+                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                  />
                 ) : (
-                  <Link
-                    to={`/update/${profile?._id}`}
-                    className="btn-primary"
-                  >
-                    Update Profile
-                  </Link>
+                  <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
                 )}
-                {otherUser && (
-                  <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
-                    Message
-                  </Link>
-                )}
+                <div className="flex-1 text-center sm:text-left min-w-0">
+                  <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
+                  <p className="text-slate-400 mt-1">{profile.name}</p>
+                  {profile.bio && (
+                    <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>
+                  )}
+                  {/* <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p> */}
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
+                  <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                    {otherUser ? (
+                      <button
+                        disabled={followMutation.isPending}
+                        onClick={() => followMutation.mutate()}
+                        className={isFollowing ? "btn-ghost" : "btn-primary"}
+                      >
+                        {isFollowing ? "Following" : "Follow"}
+                      </button>
+                    ) : (
+                      <Link
+                        to={`/update/${profile?._id}`}
+                        className="btn-primary"
+                      >
+                        Update Profile
+                      </Link>
+                    )}
+                    {otherUser && (
+                      <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
+                        Message
+                      </Link>
+                    )}
+                  </div>
+                  <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                    <p className='text-slate-400 mt-1'>{profile?.followers?.length ?? 0} {canViewPosts ? (
+                      <Link to={`/followers/${profile._id}`}>
+                        followers
+                      </Link>
+                    ) : (
+                      <span className="text-slate-500 cursor-not-allowed">
+                        followers
+                      </span>
+                    )}</p>
+                    <p className='text-slate-400 mt-1'>{profile?.following?.length ?? 0} {canViewPosts ? (
+                      <Link to={`/followers/${profile._id}`}>
+                        followers
+                      </Link>
+                    ) : (
+                      <span className="text-slate-500 cursor-not-allowed">
+                        followers
+                      </span>
+                    )}</p>
+                  </div>
+                </div>
               </div>
-              <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
-                <p className='text-slate-400 mt-1'>{profile?.followers?.length ?? 0} <Link to={`/followers/${profile._id}`}>followers</Link></p>
-                <p className='text-slate-400 mt-1'>{profile?.following?.length ?? 0} <Link to={`/followings/${profile._id}`}>followings</Link></p>
-              </div>
-            </div>
-          </div>
-          {!otherUser && (
-            <div className='flex justify-end mt-2' >
-              <button className='bg-rose-700 rounded-lg p-2 btn-ghost' onClick={userLogout}>Logout</button>
-            </div>
+              {!otherUser && (
+                <div className='flex justify-end mt-2' >
+                  <button className='bg-rose-700 rounded-lg p-2 btn-ghost' onClick={userLogout}>Logout</button>
+                </div>
+              )}
+            </header>
           )}
-        </header>
-      )}
 
-      <section>
-        <p className="section-subtitle mb-2">Activity</p>
-        <h2 className="section-title mb-6">Posts</h2>
-        <div className='stagger-children'>
-          {posts && (
-            posts?.map((e) => (
-              <div key={e._id}>
-                <Post post={e}></Post>
+          {otherUser && (
+            canViewPosts ? (
+              <section>
+                <p className="section-subtitle mb-2">Activity</p>
+                <h2 className="section-title mb-6">Posts</h2>
+                <div className='stagger-children'>
+                  {posts && (
+                    posts?.map((e) => (
+                      <div key={e._id}>
+                        <Post post={e}></Post>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </section>
+            ) : (
+              <div className='auth-input-group  py-3 border-red-500 flex  items-center'>
+                <label className="text-slate-400 shrink-0">
+                  <HiLockClosed></HiLockClosed>
+                </label>
+                <p>This Profile is Private</p>
               </div>
-            ))
+
+            )
           )}
         </div>
-      </section>
-    </div>
+
+      )}
+      {!otherUser && (
+        <div className="min-h-screen max-w-2xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
+
+          {profile && (
+            <header className="glass-panel rounded-2xl p-6 sm:p-8 mb-8 neon-ring">
+              <Link
+                to="/"
+                className=" text-slate-400  hover:text-white hover:bg-white/6 transition-all duration-300"
+              >
+                <IoArrowBack className="text-xl" />
+              </Link>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                {profile?.avatar ? (
+                  <img
+                    src={profile.avatar}
+                    alt={profile.username}
+                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                  />
+                ) : (
+                  <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
+                )}
+                <div className="flex-1 text-center sm:text-left min-w-0">
+                  <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
+                  <p>hello:   {profile?.isPrivate}</p>
+                  <p className="text-slate-400 mt-1">{profile.name}</p>
+                  {profile.bio && (
+                    <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>
+                  )}
+                  {/* <p className="text-sm text-slate-500 mt-2 truncate">{profile.email}</p> */}
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center sm:justify-end shrink-0 flex-col">
+                  <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                    {otherUser ? (
+                      <button
+                        disabled={followMutation.isPending}
+                        onClick={() => followMutation.mutate()}
+                        className={isFollowing ? "btn-ghost" : "btn-primary"}
+                      >
+                        {isFollowing ? "Following" : "Follow"}
+                      </button>
+                    ) : (
+                      <Link
+                        to={`/update/${profile?._id}`}
+                        className="btn-primary"
+                      >
+                        Update Profile
+                      </Link>
+                    )}
+                    {otherUser && (
+                      <Link to={`/chatsec/${profile?._id}`} className="btn-ghost">
+                        Message
+                      </Link>
+                    )}
+                  </div>
+                  <div className='flex flex-wrap gap-3 justify-center sm:justify-end shrink-0'>
+                    <span>
+                      <p className='text-slate-400 mt-1'> {profile?.followers?.length ?? 0}
+                        <Link className='ml-1' to={`/followers/${profile._id}`}>
+                          followers
+                        </Link>
+                      </p>
+                    </span>
+                    <span>
+                      <p className='text-slate-400 mt-1'>{profile?.following?.length ?? 0}
+                        <Link className='ml-1' to={`/followers/${profile._id}`}>
+                          followers
+                        </Link>
+                      </p>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className='flex justify-end mt-2' >
+                <button className='bg-rose-700 rounded-lg p-2 btn-ghost' onClick={userLogout}>Logout</button>
+              </div>
+            </header>
+          )}
+
+
+          <section>
+            <p className="section-subtitle mb-2">Activity</p>
+            <h2 className="section-title mb-6">Posts</h2>
+            <div className='stagger-children'>
+              {posts && (
+                posts?.map((e) => (
+                  <div key={e._id}>
+                    <Post post={e}></Post>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+        </div>
+      )}
+    </>
   )
 }
 
