@@ -46,6 +46,13 @@ const userSchema = new mongoose.Schema({
     // }],
     bio: {
         type: String
+    },
+    isVarifie:{
+        type: Boolean,
+        default: false,
+    },
+    otp :{
+        type:String
     }
 }, { timestamps: true })
 

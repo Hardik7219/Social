@@ -1,10 +1,10 @@
 
 import { MdOutlineMail } from "react-icons/md";
-import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiLockPasswordLine, RiSecurePaymentFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
-import { loginUser } from "../../../services/auth.service";
+import { loginUser, VarifiUser } from "../../../services/auth.service";
 function Login() {
     const navigate = useNavigate();
 
@@ -14,9 +14,11 @@ function Login() {
         email: "",
         password: ""
     })
+    const [isVari, setIsVari] = useState(false)
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
+    const [varE, setvarE] = useState()
+    const [otp, setOtp] = useState()
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -29,13 +31,40 @@ function Login() {
         setLoading(true);
         try {
             const data = await loginUser(formData);
-            login(data.data.user);            
+            if (data.data.Vari === true) {
+                setIsVari(true);
+                setvarE(formData.email);
+                setError(data.data.message);
+                return;
+            }
+
+            login(data.data.user);
+            login(data.data.user);
             if (data.status == 200) {
                 navigate("/");
             }
-            if (data.data.message) setError(data.message)
+            if (data.data.message) setError(data.data.message)
         } catch (error) {
             const message = error.response?.data?.message || "Login failed. Please try again.";
+            setError(message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const varifiEmail = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+            const data = await VarifiUser(varE, otp);
+            if (data.data.message) setError(data.data.message)
+            if (data.status == 200) {
+                setvarE(null)
+                setOtp(null)
+                setIsVari(false)
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || "Varifi failed. Please try again.";
             setError(message);
         } finally {
             setLoading(false);
@@ -91,6 +120,42 @@ function Login() {
                         </Link>
                     </p>
                 </form>
+                {isVari && (
+                    <div>
+                        <form onSubmit={varifiEmail} className="flex flex-col gap-5">
+                            {error && (
+                                <p className="text-red-400 text-sm text-center px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                                    {error}
+                                </p>
+                            )}
+                            <div className='auth-input-group'>
+                                <label className="text-slate-400 shrink-0"><RiSecurePaymentFill className="text-xl" /></label>
+                                <input
+                                    type="email"
+                                    placeholder='Email'
+                                    name="email"
+                                    value={varE}
+                                    className='input-glass'
+                                    onChange={(e) => setvarE(e.target.value)}
+                                />
+                            </div>
+                            <div className='auth-input-group'>
+                                <label className="text-slate-400 shrink-0"><MdOutlineMail className="text-xl" /></label>
+                                <input
+                                    type="text"
+                                    placeholder='OPT'
+                                    name="opt"
+                                    className='input-glass'
+                                    onChange={(e) => setOtp(e.target.value)}
+                                />
+                            </div>
+                            <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+                                {loading ? "Varifing in..." : "Varifi"}
+                            </button>
+                        </form>
+                    </div>
+
+                )}
             </div>
         </div>
     )

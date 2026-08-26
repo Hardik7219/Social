@@ -1,6 +1,9 @@
 import { generateToken } from "../lib/generatetoken.js";
+import { sendEmail } from "../lib/resend.email.js";
+import User from "../models/user.model.js";
 import userModel from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
+import crypto from "crypto";
 
 export const signup = async (req, res) => {
     try {
@@ -38,10 +41,37 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
         const user = await userModel.findOne({ email });
-        if (!user) return res.json({ status: 401, message: 'Invalid email or password' })
+        if (!user) return res.status(401).json({ message: 'Invalid email or password' })
         const isMatch = await bcrypt.compare(password, user?.password || "")
         if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
 
+        if (!user.isVarifie) {
+            const otp = crypto.randomInt(100000, 999999).toString();
+            console.log(otp);
+            
+            await User.findOneAndUpdate({ email: email }, {
+                otp: otp
+            })
+            await sendEmail(email, 'Hx1c33 Email Verification', `
+<div style="font-family:sans-serif;padding:20px;">
+    <h1>Email Verification</h1>
+
+    <p>Your verification code is:</p>
+
+    <div style="
+        font-size:32px;
+        font-weight:bold;
+        letter-spacing:6px;
+        margin:20px 0;
+    ">
+        ${otp}
+    </div>
+
+    <p>This OTP expires in 5 minutes.</p>
+</div>
+`)
+            return res.json({ message: "Varifi Your Email", Vari: true })
+        }
 
         generateToken(user._id, res)
 
@@ -61,7 +91,32 @@ export const login = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
+export const varifi = async (req, res) => {
+    try {
+        const { email, otp } = req.body
+        if (!email || !otp) {
+            return res.status(400).json({ message: "Email and opt are required" });
+        }
+        const user = await userModel.findOne({ email });
+        if (!user) return res.json({ status: 401, message: 'Invalid Email' })
+        if (user.otp !== otp) {
+            return res.status(400).json({ message: "otp is wrong" })
+        }
+        else {
+            await userModel.findOneAndUpdate(
+                { email },
+                {
+                    isVarifie: true,
+                    otp: null
+                }
+            );
+            return res.status(200).json({ message: "varifi successfully" })
+        }
+    } catch (error) {
+        console.log("Error in varifi controller", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
 
 export const getData = async (req, res) => {
     try {
@@ -78,7 +133,7 @@ export const logout = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: "none",
-            path: "/" 
+            path: "/"
         });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {

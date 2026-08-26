@@ -5,12 +5,20 @@ export const loginUser = async (data) => {
     const response = await API.post(
         "/auth/login",
         data
-    );
-    
+    );    
     return response;
 };
 
-
+export const VarifiUser = async (email,otp)=>{
+        const res=await API.post(
+        "/auth/varifi",{
+            email,otp
+        }
+    );
+    console.log(res);
+    
+    return res;
+}
 export const signUp = async (data)=>{
     const res=await API.post(
         "/auth/signup",
