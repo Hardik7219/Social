@@ -9,6 +9,7 @@ import SkeletonPost from "../../components/ui/skelotonLoaders/SkeletonPost";
 import SkeletonProfile from "../../components/ui/skelotonLoaders/SkeletonProfile";
 import { IoArrowBack } from "react-icons/io5";
 import { HiLockClosed } from "react-icons/hi";
+import { BiLock } from "react-icons/bi";
 function ProfilePage() {
   const { user, logout, loading: authLoading } = useAuth();
   const { id } = useParams();
@@ -260,9 +261,8 @@ function ProfilePage() {
                 )}
                 <div className="flex-1 text-center sm:text-left min-w-0">
                   <h1 className="text-2xl font-bold text-white truncate">
-                    {profile.username}
+                    <p className="flex items-center">{profile.isPrivate ? <BiLock></BiLock> : ""}{profile.username}</p> 
                   </h1>
-                  <p>hello: {profile?.isPrivate}</p>
                   <p className="text-slate-400 mt-1">{profile.name}</p>
                   {profile.bio && (
                     <p className="text-sm text-slate-400 mt-2">{profile.bio}</p>

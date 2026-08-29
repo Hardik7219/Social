@@ -83,7 +83,7 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         if(bio.length>=20){
-            return res.status(404).json({message:"maximum 20 letters"});
+            return res.status(404).json({message:"Maximum 20 letters in bio"});
         }
         if (!currentPassword) {
             return res.status(400).json({ message: "Password is required" });

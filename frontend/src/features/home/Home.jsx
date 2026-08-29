@@ -63,7 +63,7 @@ function Home() {
         };
     }, []);
     if (loading) {
-       return <AppLoader></AppLoader>
+        return <AppLoader></AppLoader>
     }
     return (
 
