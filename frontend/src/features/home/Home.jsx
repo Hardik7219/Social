@@ -62,9 +62,6 @@ function Home() {
             socket.off("connect");
         };
     }, []);
-    if (loading) {
-        return <AppLoader></AppLoader>
-    }
     return (
 
         <div className="min-h-screen text-white flex justify-center">
