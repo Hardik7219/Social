@@ -195,7 +195,7 @@ function ProfilePage() {
                         <Link to={`/followings/${profile._id}`}>followers</Link>
                       ) : (
                         <span className="text-slate-500 cursor-not-allowed">
-                          followers
+                          followings
                         </span>
                       )}
                     </p>
@@ -310,7 +310,7 @@ function ProfilePage() {
                       <p className="text-slate-400 mt-1">
                         {profile?.following?.length ?? 0}
                         <Link className="ml-1" to={`/followings/${profile._id}`}>
-                          followers
+                          followings
                         </Link>
                       </p>
                     </span>
