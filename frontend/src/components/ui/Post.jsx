@@ -176,8 +176,8 @@ function Post({ post }) {
         <>
             <article className="card-post">
                 {deleteSure && (
-                    <div className="absolute inset-0 z-50 flex flex-col sm:flex-row items-center justify-center gap-3 p-6 rounded-2xl bg-slate-950/90 backdrop-blur-md">
-                        <p className="text-slate-300 text-sm font-medium">Delete this post?</p>
+                    <div className="absolute inset-0 z-50 flex flex-col sm:flex-row items-center justify-center gap-3 p-6 bg-slate-950/95 backdrop-blur-md border-2 border-red-500/40" style={{borderRadius: '4px'}}>
+                        <p className="text-slate-200 text-sm font-black uppercase tracking-wide">Delete this post?</p>
                         <div className="flex gap-3">
                             <button onClick={() => setDeleteSure(false)} className="btn-ghost">Cancel</button>
                             <button onClick={deletePosts} className="btn-danger">Delete</button>
@@ -190,7 +190,8 @@ function Post({ post }) {
                         <img
                             src={post?.userId.avatar}
                             alt={post.userId.username}
-                            className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+                            className="h-12 w-12 rounded-sm object-cover border-2 border-blue-500/50 shrink-0"
+                            style={{boxShadow: '3px 3px 0 rgba(59,130,246,0.45)'}}
                         />
                     ) : (
                         <div className="avatar-placeholder h-12 w-12  shrink-0" />
@@ -211,7 +212,8 @@ function Post({ post }) {
                     {user._id == post.userId._id && (
                         <button
                             onClick={() => setDeleteSure(true)}
-                            className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
+                            className="p-2 text-slate-500 hover:text-red-400 border-2 border-transparent hover:border-red-500/40 transition-all duration-150 hover:bg-red-500/10"
+                            style={{borderRadius: '4px'}}
                             aria-label="Delete post"
                         >
                             <HiOutlineTrash className="text-lg" />
@@ -298,22 +300,24 @@ function Post({ post }) {
                         <button
                             disabled={likeMutation.isPending}
                             onClick={() => likeMutation.mutate()}
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-300 group"
+                            className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400 hover:text-cyan-400 border-2 border-transparent hover:border-cyan-500/40 transition-all duration-150 px-3 py-1.5"
+                            style={{borderRadius: '4px'}}
                         >
                             {isLiked ? (
-                                <AiTwotoneLike className="text-lg text-cyan-400 group-hover:scale-110 transition-transform" />
+                                <AiTwotoneLike className="text-lg text-cyan-400" />
                             ) : (
-                                <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""} group-hover:scale-110 transition-transform`} />
+                                <AiOutlineLike className={`text-lg ${isLiked ? "text-cyan-400" : ""}`} />
                             )}
-                            <span className="font-medium">{post.likes?.length ?? 0}</span>
+                            <span>{post.likes?.length ?? 0}</span>
                             <span className="hidden sm:inline">Likes</span>
                         </button>
                         <button
                             onClick={() => setShowComments(current => !current)}
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors duration-300 group"
+                            className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400 hover:text-blue-400 border-2 border-transparent hover:border-blue-500/40 transition-all duration-150 px-3 py-1.5"
+                            style={{borderRadius: '4px'}}
                         >
-                            <BiCommentDetail className="text-lg group-hover:scale-110 transition-transform" />
-                            <span className="font-medium">{post.comments?.length ?? 0}</span>
+                            <BiCommentDetail className="text-lg" />
+                            <span>{post.comments?.length ?? 0}</span>
                             <span className="hidden sm:inline">Comments</span>
                         </button>
                     </div>

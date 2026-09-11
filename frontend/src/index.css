@@ -13,9 +13,14 @@
   --color-neon-dim: rgba(34, 211, 238, 0.15);
   --color-text-muted: #94a3b8;
   --color-text-dim: #64748b;
-  --shadow-neon: 0 0 20px rgba(59, 130, 246, 0.25), 0 0 40px rgba(34, 211, 238, 0.08);
+
+  /* Brutal shadow tokens */
+  --brutal-shadow: 4px 4px 0 rgba(59, 130, 246, 0.8);
+  --brutal-shadow-cyan: 4px 4px 0 rgba(34, 211, 238, 0.7);
+  --brutal-shadow-sm: 3px 3px 0 rgba(59, 130, 246, 0.7);
+  --brutal-shadow-lg: 6px 6px 0 rgba(59, 130, 246, 0.9);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --radius-card: 1rem;
+  --radius-card: 0.5rem;
   --radius-pill: 9999px;
 }
 
@@ -51,115 +56,180 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-slate-700/80;
+    @apply rounded-sm bg-blue-600/60;
+    border: 1px solid rgba(59, 130, 246, 0.4);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-blue-500/50;
+    @apply bg-cyan-500/60;
   }
 }
 
 @layer components {
+
+  /* ─── GLASS PANELS (Brutalized) ─── */
   .glass-panel {
-    @apply backdrop-blur-xl border border-white/[0.06];
+    @apply border-2 border-blue-500/40;
     background: linear-gradient(
       135deg,
-      rgba(21, 29, 46, 0.85) 0%,
-      rgba(15, 20, 25, 0.75) 100%
+      rgba(21, 29, 46, 0.92) 0%,
+      rgba(15, 20, 25, 0.88) 100%
     );
-    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    box-shadow: var(--brutal-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .glass-panel-strong {
-    @apply backdrop-blur-2xl border border-blue-500/10;
+    @apply border-2 border-blue-500/30;
     background: linear-gradient(
       160deg,
-      rgba(17, 24, 39, 0.95) 0%,
-      rgba(10, 14, 23, 0.9) 100%
+      rgba(17, 24, 39, 0.97) 0%,
+      rgba(10, 14, 23, 0.95) 100%
     );
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.3);
   }
 
   .neon-ring {
     box-shadow:
-      0 0 0 1px rgba(59, 130, 246, 0.2),
-      0 0 16px rgba(34, 211, 238, 0.12);
+      0 0 0 2px rgba(59, 130, 246, 0.5),
+      3px 3px 0 rgba(34, 211, 238, 0.35);
   }
 
+  /* ─── BUTTONS ─── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm
-      text-white transition-all duration-300 ease-out
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-bold text-sm
+      text-white uppercase tracking-wide
       bg-gradient-to-r from-blue-600 to-cyan-500
-      hover:from-blue-500 hover:to-cyan-400
-      hover:shadow-[0_0_24px_rgba(59,130,246,0.45)]
-      active:scale-[0.98]
-      disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none;
+      border-2 border-blue-400
+      transition-all duration-150 ease-out
+      active:translate-x-[3px] active:translate-y-[3px]
+      disabled:opacity-50 disabled:pointer-events-none;
+    border-radius: 4px;
+    box-shadow: var(--brutal-shadow);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 6px 6px 0 rgba(59, 130, 246, 0.9);
+    transform: translate(-1px, -1px);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    box-shadow: 1px 1px 0 rgba(59, 130, 246, 0.9);
+    transform: translate(3px, 3px);
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium
-      text-slate-300 border border-white/10 bg-white/[0.03]
-      transition-all duration-300
-      hover:bg-white/[0.06] hover:border-blue-500/30 hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-bold text-sm uppercase tracking-wide
+      text-slate-300 border-2 border-slate-600/70 bg-white/[0.03]
+      transition-all duration-150;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(100, 116, 139, 0.4);
+  }
+
+  .btn-ghost:hover {
+    @apply text-white border-blue-500/60 bg-white/[0.06];
+    box-shadow: 4px 4px 0 rgba(59, 130, 246, 0.5);
+    transform: translate(-1px, -1px);
+  }
+
+  .btn-ghost:active {
+    box-shadow: 1px 1px 0 rgba(59, 130, 246, 0.5);
+    transform: translate(2px, 2px);
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-medium
-      text-red-300 border border-red-500/20 bg-red-500/10
-      transition-all duration-300 hover:bg-red-500/20 hover:border-red-500/40;
+    @apply inline-flex items-center justify-center px-4 py-2 font-bold text-sm uppercase tracking-wide
+      text-red-300 border-2 border-red-500/50 bg-red-500/10
+      transition-all duration-150;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(239, 68, 68, 0.4);
   }
 
+  .btn-danger:hover {
+    @apply bg-red-500/20 border-red-500/70;
+    box-shadow: 4px 4px 0 rgba(239, 68, 68, 0.55);
+    transform: translate(-1px, -1px);
+  }
+
+  .btn-danger:active {
+    box-shadow: 1px 1px 0 rgba(239, 68, 68, 0.5);
+    transform: translate(2px, 2px);
+  }
+
+  /* ─── INPUTS ─── */
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl text-slate-100 placeholder:text-slate-500
-      bg-white/[0.04] border border-white/10 outline-none
-      transition-all duration-300
-      focus:border-blue-500/50 focus:bg-white/[0.06]
-      focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)];
+    @apply w-full px-4 py-3 text-slate-100 placeholder:text-slate-500
+      bg-white/[0.04] border-2 border-slate-600/60 outline-none
+      transition-all duration-200
+      focus:border-blue-500/80 focus:bg-white/[0.06];
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.2);
+  }
+
+  .input-field:focus {
+    box-shadow: 4px 4px 0 rgba(59, 130, 246, 0.5);
   }
 
   .input-glass {
     @apply flex-1 bg-transparent outline-none text-slate-100 placeholder:text-slate-500 text-sm;
   }
 
+  /* ─── NAV ITEMS ─── */
   .nav-item {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 font-medium text-sm
-      transition-all duration-300 cursor-pointer
-      hover:bg-white/[0.05] hover:text-slate-100;
+    @apply flex items-center gap-3 px-4 py-3 font-bold text-sm text-slate-400
+      uppercase tracking-wide cursor-pointer
+      border-2 border-transparent
+      transition-all duration-150;
+    border-radius: 4px;
+  }
+
+  .nav-item:hover {
+    @apply bg-white/[0.05] text-slate-100 border-slate-700/60;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.3);
+    transform: translate(-1px, -1px);
   }
 
   .nav-item-active {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm cursor-pointer
-      text-white bg-gradient-to-r from-blue-600/20 to-cyan-500/10
-      border border-blue-500/25 shadow-[0_0_20px_rgba(59,130,246,0.12)];
+    @apply flex items-center gap-3 px-4 py-3 font-bold text-sm
+      text-white bg-gradient-to-r from-blue-600/25 to-cyan-500/15
+      uppercase tracking-wide cursor-pointer
+      border-2 border-blue-500/50;
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 rgba(59, 130, 246, 0.6);
   }
 
+  /* ─── POST CARDS ─── */
   .card-post {
-    @apply relative rounded-2xl overflow-hidden mb-6 backdrop-blur-xl
-      border border-white/[0.06] transition-all duration-300
-      hover:border-blue-500/20;
+    @apply relative overflow-hidden mb-6
+      border-2 border-blue-500/30
+      transition-all duration-150;
     background: linear-gradient(
       135deg,
-      rgba(21, 29, 46, 0.85) 0%,
-      rgba(15, 20, 25, 0.75) 100%
+      rgba(21, 29, 46, 0.92) 0%,
+      rgba(15, 20, 25, 0.85) 100%
     );
-    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    box-shadow: var(--brutal-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .card-post:hover {
-    box-shadow: var(--shadow-neon), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border-color: rgba(59, 130, 246, 0.65);
+    box-shadow: var(--brutal-shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transform: translate(-2px, -2px);
   }
 
+  /* ─── CODE SNIPPET ─── */
   .code-snippet {
-    @apply mx-5 mb-4 rounded-xl overflow-hidden border border-cyan-500/20;
+    @apply mx-5 mb-4 overflow-hidden border-2 border-cyan-500/40;
     background: linear-gradient(180deg, #0d1117 0%, #080b12 100%);
+    border-radius: 4px;
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 8px 32px rgba(0, 0, 0, 0.35),
-      0 0 0 1px rgba(34, 211, 238, 0.08);
+      var(--brutal-shadow-cyan),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .code-snippet-header {
     @apply flex items-center justify-between gap-3 px-4 py-2.5
-      border-b border-white/[0.06] bg-white/[0.03];
+      border-b-2 border-cyan-500/20 bg-white/[0.03];
   }
 
   .code-snippet-body {
@@ -181,66 +251,93 @@
     @apply ring-0;
   }
 
+  /* ─── AVATARS ─── */
   .avatar-placeholder {
-    @apply rounded-full shrink-0 bg-gradient-to-br from-blue-600/40 to-cyan-500/30
-      border border-blue-500/30;
-    box-shadow:
-      0 0 0 1px rgba(59, 130, 246, 0.2),
-      0 0 16px rgba(34, 211, 238, 0.12);
+    @apply rounded-sm shrink-0 bg-gradient-to-br from-blue-600/40 to-cyan-500/30
+      border-2 border-blue-500/50;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.4);
   }
 
+  /* ─── SECTION TITLES ─── */
   .section-title {
-    @apply text-lg font-semibold tracking-tight text-white;
+    @apply text-lg font-black tracking-tight text-white uppercase;
   }
 
   .section-subtitle {
-    @apply text-xs font-medium uppercase tracking-widest text-cyan-400/80;
+    @apply text-xs font-black uppercase tracking-widest text-cyan-400/90;
+    letter-spacing: 0.2em;
   }
 
+  /* ─── DIVIDER ─── */
   .divider-glow {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-blue-500/30 to-transparent;
+    @apply h-[2px] w-full;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(34, 211, 238, 0.4), transparent);
   }
 
+  /* ─── SUGGESTION CARDS ─── */
   .suggestion-card {
-    @apply p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]
-      transition-all duration-300
-      hover:bg-white/[0.04] hover:border-blue-500/25 hover:translate-y-[-1px];
+    @apply p-4 border-2 border-slate-700/50 bg-white/[0.02]
+      transition-all duration-150 cursor-pointer;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.2);
   }
 
+  .suggestion-card:hover {
+    @apply bg-white/[0.05] border-blue-500/50;
+    box-shadow: 5px 5px 0 rgba(59, 130, 246, 0.45);
+    transform: translate(-2px, -2px);
+  }
+
+  /* ─── AUTH CARD ─── */
   .auth-card {
-    @apply w-full max-w-md p-8 sm:p-10 rounded-2xl backdrop-blur-2xl
-      border border-blue-500/10;
+    @apply w-full max-w-md p-8 sm:p-10
+      border-2 border-blue-500/50;
     animation: fade-in-up 0.5s ease-out forwards;
     background: linear-gradient(
       160deg,
-      rgba(17, 24, 39, 0.95) 0%,
-      rgba(10, 14, 23, 0.9) 100%
+      rgba(17, 24, 39, 0.97) 0%,
+      rgba(10, 14, 23, 0.95) 100%
     );
+    border-radius: 6px;
     box-shadow:
-      0 0 0 1px rgba(59, 130, 246, 0.2),
-      0 0 16px rgba(34, 211, 238, 0.12),
+      8px 8px 0 rgba(59, 130, 246, 0.6),
       var(--shadow-card);
   }
 
   .auth-input-group {
-    @apply flex items-center gap-3 w-full px-4 py-3 rounded-xl
-      bg-white/[0.04] border border-white/10
-      transition-all duration-300
-      focus-within:border-blue-500/40 focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)];
+    @apply flex items-center gap-3 w-full px-4 py-3
+      bg-white/[0.04] border-2 border-slate-600/60
+      transition-all duration-200;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.15);
   }
 
+  .auth-input-group:focus-within {
+    @apply border-blue-500/70;
+    box-shadow: 4px 4px 0 rgba(59, 130, 246, 0.45);
+  }
+
+  /* ─── CHAT BUBBLES ─── */
   .chat-bubble-sent {
-    @apply ml-auto max-w-[75%] px-4 py-2.5 rounded-2xl rounded-br-md
-      bg-gradient-to-r from-blue-600/90 to-cyan-600/80 text-white text-sm;
+    @apply ml-auto max-w-[75%] px-4 py-2.5
+      bg-gradient-to-r from-blue-600/90 to-cyan-600/80 text-white text-sm
+      border-2 border-blue-400/60;
+    border-radius: 6px 6px 2px 6px;
+    box-shadow: 3px 3px 0 rgba(59, 130, 246, 0.5);
   }
 
   .chat-bubble-received {
-    @apply mr-auto max-w-[75%] px-4 py-2.5 rounded-2xl rounded-bl-md
-      bg-white/[0.06] border border-white/10 text-slate-200 text-sm;
+    @apply mr-auto max-w-[75%] px-4 py-2.5
+      bg-white/[0.06] border-2 border-slate-600/50 text-slate-200 text-sm;
+    border-radius: 6px 6px 6px 2px;
+    box-shadow: 3px 3px 0 rgba(100, 116, 139, 0.3);
   }
 
+  /* ─── SHIMMER ─── */
   .shimmer {
-    @apply relative overflow-hidden bg-slate-800/60 rounded-lg;
+    @apply relative overflow-hidden bg-slate-800/60;
+    border-radius: 4px;
+    border: 2px solid rgba(59, 130, 246, 0.15);
   }
 
   .shimmer::after {
@@ -262,10 +359,11 @@
   }
 
   .glow-text {
-    text-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+    text-shadow: 0 0 24px rgba(59, 130, 246, 0.6), 2px 2px 0 rgba(34, 211, 238, 0.2);
   }
 }
 
+/* ─── KEYFRAMES ─── */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -286,12 +384,12 @@
   }
 }
 
-@keyframes pulse-glow {
+@keyframes pulse-brutal {
   0%, 100% {
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+    box-shadow: 4px 4px 0 rgba(59, 130, 246, 0.7);
   }
   50% {
-    box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
+    box-shadow: 6px 6px 0 rgba(34, 211, 238, 0.8);
   }
 }
 
@@ -314,8 +412,7 @@
 .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
 
 
-/* From Uiverse.io by gharsh11032000 */ 
-/* The switch - the box around the slider */
+/* ─── TOGGLE SWITCH (Brutalized) ─── */
 .switch {
   font-size: 12px;
   position: relative;
@@ -324,40 +421,55 @@
   height: 2em;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  border: 2px solid #414141;
-  border-radius: 50px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid #3b82f6;
+  border-radius: 3px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 2px 2px 0 rgba(59, 130, 246, 0.6);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 1.4em;
-  width: 1.4em;
+  height: 1.3em;
+  width: 1.3em;
   left: 0.2em;
   bottom: 0.2em;
-  background-color: white;
-  border-radius: inherit;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  background-color: #3b82f6;
+  border-radius: 2px;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.320, 1);
 }
 
 .switch input:checked + .slider {
-
-  border: 2px solid #0974f1;
+  border: 2px solid #22d3ee;
+  box-shadow: 2px 2px 0 rgba(34, 211, 238, 0.7);
 }
 
-.switch input:checked + .slider:before { 
+.switch input:checked + .slider:before {
   transform: translateX(1.5em);
+  background-color: #22d3ee;
+}
+
+/* ─── BRUTAL ACCENT HELPERS ─── */
+.brutal-tag {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-black uppercase tracking-wider
+    text-cyan-300 border-2 border-cyan-500/50 bg-cyan-500/10;
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 rgba(34, 211, 238, 0.4);
+}
+
+.brutal-badge {
+  @apply inline-flex items-center justify-center min-w-5 h-5 px-1
+    text-[10px] font-black text-white bg-red-500 border-2 border-red-400;
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 rgba(239, 68, 68, 0.5);
 }

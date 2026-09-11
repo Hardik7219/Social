@@ -72,7 +72,8 @@ function Posts() {
           <img
             src={user.avatar}
             alt={user.name}
-            className="h-14 w-14 rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+            className="h-14 w-14 rounded-sm object-cover border-2 border-blue-500/50 shrink-0"
+            style={{boxShadow: '3px 3px 0 rgba(59,130,246,0.45)'}}
           />
         ) : (
           <div className="avatar-placeholder h-14 w-14 shrink-0" />

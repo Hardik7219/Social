@@ -9,7 +9,8 @@ function UserUi({ id, avatar,username, name }) {
             <img
               src={avatar}
               alt={username}
-              className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+              className="h-12 w-12 rounded-sm object-cover border-2 border-blue-500/50 shrink-0"
+              style={{boxShadow: '3px 3px 0 rgba(59,130,246,0.4)'}}
             />
           ) : (
             <div className="avatar-placeholder h-12 w-12  shrink-0" />

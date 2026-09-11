@@ -22,20 +22,21 @@ function Comment({ id, username, name, commentId, postId, comment, time, avatar 
   }
   return (
     <>
-      <div className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/4 hover:border-blue-500/15 transition-colors duration-300 ">
+      <div className="flex gap-3 p-3 border-2 border-slate-700/50 bg-white/[0.02] hover:border-blue-500/30 transition-all duration-150" style={{borderRadius: '4px', boxShadow: '2px 2px 0 rgba(59, 130, 246, 0.15)'}}>
         {avatar ? (
           <img
             src={avatar}
             alt={name}
-            className="h-12 w-12  rounded-full object-cover border border-blue-500/30 neon-ring shrink-0"
+            className="h-12 w-12 rounded-sm object-cover border-2 border-blue-500/50 shrink-0"
+            style={{boxShadow: '3px 3px 0 rgba(59,130,246,0.4)'}}
           />
         ) : (
           <div className="avatar-placeholder h-12 w-12  shrink-0" />
         )}
         <div className="flex-1 min-w-0">
           {deleteSure && (
-            <div className="absolute  z-50 flex flex-col sm:flex-row items-center justify-center gap-2 p-6 rounded-2xl bg-slate-950/90 backdrop-blur-md">
-              <p className="text-slate-300 text-sm font-medium">Delete this comment?</p>
+            <div className="absolute z-50 flex flex-col sm:flex-row items-center justify-center gap-2 p-6 bg-slate-950/95 backdrop-blur-md border-2 border-red-500/40" style={{borderRadius: '4px'}}>
+              <p className="text-slate-200 text-sm font-black uppercase tracking-wide">Delete this comment?</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteSure(false)} className="btn-ghost">Cancel</button>
                 <button className="btn-danger" onClick={handleDelete}>{deleting ? ("Deleting..") :("Delete")}</button>
@@ -52,8 +53,9 @@ function Comment({ id, username, name, commentId, postId, comment, time, avatar 
             {!otherUser && (
               <button
                 onClick={() => setDeleteSure(true)}
-                className="p-2 rounded-lg flex justify-self-end text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
-                aria-label="Delete post"
+                className="p-2 flex justify-self-end text-slate-500 hover:text-red-400 border-2 border-transparent hover:border-red-500/40 transition-all duration-150 hover:bg-red-500/10"
+                style={{borderRadius: '4px'}}
+                aria-label="Delete comment"
               >
                 <HiOutlineTrash className="text-lg" />
               </button>
