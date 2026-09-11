@@ -192,10 +192,10 @@ function ProfilePage() {
                     <p className="text-slate-400 mt-1">
                       {profile?.following?.length ?? 0}{" "}
                       {canViewPosts ? (
-                        <Link to={`/followers/${profile._id}`}>followers</Link>
+                        <Link to={`/followings/${profile._id}`}>followings</Link>
                       ) : (
                         <span className="text-slate-500 cursor-not-allowed">
-                          followers
+                          followings
                         </span>
                       )}
                     </p>
@@ -309,8 +309,8 @@ function ProfilePage() {
                     <span>
                       <p className="text-slate-400 mt-1">
                         {profile?.following?.length ?? 0}
-                        <Link className="ml-1" to={`/followers/${profile._id}`}>
-                          followers
+                        <Link className="ml-1" to={`/followings/${profile._id}`}>
+                          followings
                         </Link>
                       </p>
                     </span>
