@@ -129,11 +129,10 @@ function ChatSection() {
                         <img
                             src={avatar}
                             alt={name}
-                            className="h-12 w-12 rounded-sm object-cover border-2 border-blue-500/50 shrink-0"
-                            style={{boxShadow: '3px 3px 0 rgba(59,130,246,0.45)'}}
+                            className="h-9 w-9 rounded-full object-cover border border-white/[0.1] shrink-0"
                         />
                     ) : (
-                        <div className="avatar-placeholder h-12 w-12  shrink-0" />
+                        <div className="avatar-placeholder h-9 w-9 shrink-0" />
                     )}
                     <div className="min-w-0">
                         {name && (
@@ -170,7 +169,7 @@ function ChatSection() {
 
                 <div className='sticky bottom-0 p-4 glass-panel-strong border-t border-white/6'>
                     <form className='w-full' onSubmit={sendMsg}>
-                <div className='flex items-center gap-2 border-2 border-blue-500/40 bg-white/[0.04] p-1.5 focus-within:border-cyan-400/60 transition-all duration-200' style={{borderRadius: '4px', boxShadow: '4px 4px 0 rgba(59,130,246,0.4)'}}>
+                <div className='flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] p-1 focus-within:border-blue-500/40 focus-within:bg-white/[0.06] transition-all duration-200'>
                             <input
                                 onChange={(e) => setMsg(e.target.value)}
                                 className='input-glass flex-1 px-4 py-2.5'
@@ -189,8 +188,8 @@ function ChatSection() {
                 <div ref={bottomRef}></div>
                 {deleteSure && (
                     <div className='w-full h-screen absolute z-50 flex justify-center items-center lg:justify-start backdrop-blur-md'>
-                        <div className="flex flex-col sm:flex-row mb-0 items-center justify-center gap-2 p-6 bg-slate-950/95 backdrop-blur-md border-2 border-red-500/40" style={{borderRadius: '4px', boxShadow: '6px 6px 0 rgba(239,68,68,0.4)'}}>
-                            <p className="text-slate-200 text-sm font-black uppercase tracking-wide">Delete this message?</p>
+                        <div className="flex flex-col sm:flex-row mb-0 items-center justify-center gap-2 p-6 rounded-2xl bg-slate-950/95 backdrop-blur-md border border-white/[0.08]">
+                            <p className="text-slate-300 text-sm font-medium">Delete this message?</p>
                             <div className="flex gap-3">
                                 <button onClick={() => {
                                     setDeleteSure(false)

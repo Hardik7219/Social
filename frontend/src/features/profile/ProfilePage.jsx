@@ -136,8 +136,7 @@ function ProfilePage() {
                   <img
                     src={profile.avatar}
                     alt={profile.username}
-                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-sm object-cover border-2 border-blue-500/60 shrink-0"
-                    style={{boxShadow: '5px 5px 0 rgba(59,130,246,0.55)'}}
+                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-white/[0.12] shrink-0"
                   />
                 ) : (
                   <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
@@ -255,8 +254,7 @@ function ProfilePage() {
                   <img
                     src={profile.avatar}
                     alt={profile.username}
-                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-sm object-cover border-2 border-blue-500/60 shrink-0"
-                    style={{boxShadow: '5px 5px 0 rgba(59,130,246,0.55)'}}
+                    className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border border-white/[0.12] shrink-0"
                   />
                 ) : (
                   <div className="avatar-placeholder h-24 w-24 sm:h-28 sm:w-28 shrink-0" />
