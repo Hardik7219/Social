@@ -13,7 +13,7 @@
 - **Real-time Chat** — One-on-one messaging powered by Socket.IO
 - **Follow System** — Follow/unfollow users, view follower and following lists
 - **Notifications** — Like and follow notifications
-- **Profile** — View and update your profile (username, name, bio, avatar)
+- **Profile** — View and update your profile (username, name, bio, avatar, private/public account)
 - **Search** — Search users by name or username
 - **Suggested Users** — Discover new people to follow
 
